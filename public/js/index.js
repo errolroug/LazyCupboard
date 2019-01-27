@@ -1,19 +1,22 @@
+$(document).ready(function() {
+  $('select').formSelect();
+
 // Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
-var $submitBtn = $("#submit");
-var $exampleList = $("#example-list");
+var $ingredientAdded = $("#ingredient");
+var $ingredientType = $("#ingredient-type");
+var $submitBtn = $("#add-ingredient-form");
+var $exampleList = $("#ingredient-list");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  saveIngredient: function(ingredient) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
       },
       type: "POST",
       url: "api/examples",
-      data: JSON.stringify(example)
+      data: JSON.stringify(ingredient)
     });
   },
   getExamples: function() {
@@ -64,22 +67,22 @@ var refreshExamples = function() {
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
+  var ingredient = {
+    ingredient: $ingredientAdded.val().trim(),
+    description: $ingredientType.find(":selected").text()
   };
 
-  if (!(example.text && example.description)) {
+  if (!(ingredient.ingredient && ingredient.description)) {
     alert("You must enter an example text and description!");
     return;
   }
 
-  API.saveExample(example).then(function() {
+  API.saveIngredient(ingredient).then(function() {
     refreshExamples();
   });
 
-  $exampleText.val("");
-  $exampleDescription.val("");
+  $ingredientAdded.val("");
+  $ingredientType.val("");
 };
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
@@ -95,5 +98,11 @@ var handleDeleteBtnClick = function() {
 };
 
 // Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
+$submitBtn.on("submit", handleFormSubmit);
 $exampleList.on("click", ".delete", handleDeleteBtnClick);
+
+
+
+});
+
+

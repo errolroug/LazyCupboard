@@ -32,7 +32,7 @@ module.exports = function(app) {
               ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
 
               //Send ingredient array to browser
-              res.send(ingredientArray);
+              res.json(ingredientArray);
             }
         )
         .catch(function (error) {
@@ -41,6 +41,7 @@ module.exports = function(app) {
             };
         });
 
+        
   });
 
 

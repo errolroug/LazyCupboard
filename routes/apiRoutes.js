@@ -22,18 +22,17 @@ module.exports = function(app) {
     // console.log(queryUrl);
     axios.get(queryUrl).then(
             function (response) {
-                //Send API response to browser  
-                        html += "<ul>";
-                        html += "<li>";
-                        html += "<p>Result Description: " + response.data.parsed[0].food.label + "</p>";
-                        html += "<p>Cal: " + response.data.parsed[0].food.nutrients.ENERC_KCAL + "</p>";
-                        html += "<p>Protein: " + response.data.parsed[0].food.nutrients.PROCNT + "</p>";
-                        html += "<p>Fat: " + response.data.parsed[0].food.nutrients.FAT + "</p>";
-                        html += "<p>Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF + "</p>";
-                        html += "</li>";
-                        html += "</ul>";
-                res.send(html);
+              var ingredientArray = [];
 
+              //Push API response to ingredient array  
+              ingredientArray.push("Label: " + response.data.parsed[0].food.label);
+              ingredientArray.push("Cal: " + response.data.parsed[0].food.nutrients.ENERC_KCAL);
+              ingredientArray.push("Protein: " + response.data.parsed[0].food.nutrients.PROCNT);
+              ingredientArray.push("Fat: " + response.data.parsed[0].food.nutrients.FAT);
+              ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
+
+              //Send ingredient array to browser
+              res.send(ingredientArray);
             }
         )
         .catch(function (error) {

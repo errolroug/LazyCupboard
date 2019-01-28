@@ -45,17 +45,47 @@ module.exports = function(app) {
   });
 
 
+  // Get recipes and nutritional info via API call to Edamam
+  app.post("/recipesAPI", function(req, res) {
+            // Create an empty variable for holding the movie name
+            var food = "chicken";
+    
+            //NOTE: This ID is exclusively used for individual food item lookup
+            var queryID = "fcb72d93";
+        
+            //NOTE: This key is exclusively used for individual food item lookup
+            var queryKey = "f10388ab91215f04c2c1a28330336b8d";
+        
+            // Then run a request with axios to the Edamam API with the movie specified
+            //NOTE: You can add additional parameters to this request, see documentation 
+            var queryUrl = "https://api.edamam.com/search?q=" + food + "&app_id=" + queryID + "&app_key=" + queryKey;
+        
+            // This line is just to help us debug against the actual URL.
+            // console.log(queryUrl);
+            axios.get(queryUrl).then(
+                    function (response) {
+                        // Recipes array
+                        var recipeArray = [];
+    
+                        for (let index = 0; index < response.data.hits.length; index++) {
+    
+                            recipeArray.push(response.data.hits[index].recipe.label);
+                            recipeArray.push(response.data.hits[index].recipe.ingredientLines);
+                            recipeArray.push(response.data.hits[index].recipe.totalNutrients);
+                        }
+                        //Send API response to browser 
+                        res.json(recipeArray);
+                    }
+                )
+                .catch(function (error) {
+                    if (error) {
+                        console.log("NO RESULTS FOUND")
+                    };
+                });
+    });
 
   //COMMENTING THIS OUT FOR NOW_________________________________________________________
   // Will add back to the file once the first get request works
-  
-  
-  // // Create a new example
-  // app.post("/api/examples", function(req, res) {
-  //   db.Example.create(req.body).then(function(dbExample) {
-  //     res.json(dbExample);
-  //   });
-  // });
 
   // // Delete an example by id
   // app.delete("/api/examples/:id", function(req, res) {

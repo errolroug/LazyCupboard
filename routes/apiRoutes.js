@@ -1,12 +1,24 @@
 var db = require("../models");
+var axios = require("axios")
 
 module.exports = function(app) {
+
+    app.get("/api/ingredients", function(req, res) {
+        db.Ingredients.findAll().then(function(dbIngredient) {
+          res.json(dbIngredient);
+        });
+    });
   
   // Get individual ingredient nutritional value info via API call to Edamam
-  app.get("/ingredientsAPI", function(req, res) {
-    var html = "<h1>INGREDIENT API RESPONSE(S)</h1>";
+  app.post("/api/ingredientsAPI", function(req, res) {
 
-    var food = "chicken";
+    //console log what we are receiving from the front end
+    console.log(req.body)
+
+    // var html = "<h1>INGREDIENT API RESPONSE(S)</h1>";
+
+    //insert ingredient into the variable:
+    var food = req.body.ingredient;
     
     //NOTE: This ID is exclusively used for individual food item lookup
     var queryID = "80dab669";

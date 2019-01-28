@@ -5,7 +5,7 @@ $(document).ready(function() {
 var $ingredientAdded = $("#ingredient");
 var $ingredientType = $("#ingredient-type");
 var $submitBtn = $("#add-ingredient-form");
-var $exampleList = $("#ingredient-list");
+var $ingredientList = $("#ingredient-list");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
@@ -15,13 +15,13 @@ var API = {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/examples",
+      url: "/api/ingredientsAPI",
       data: JSON.stringify(ingredient)
     });
   },
-  getExamples: function() {
+  getIngredients: function() {
     return $.ajax({
-      url: "api/examples",
+      url: "api/ingredients",
       type: "GET"
     });
   },
@@ -33,9 +33,10 @@ var API = {
   }
 };
 
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
+// refreshIngredients gets new examples from the db and repopulates the list
+var refreshIngredients = function() {
+  API.getIngredients().then(function(data) {
+    console.log(data)
     var $examples = data.map(function(example) {
       var $a = $("<a>")
         .text(example.text)
@@ -57,8 +58,8 @@ var refreshExamples = function() {
       return $li;
     });
 
-    $exampleList.empty();
-    $exampleList.append($examples);
+    $ingredientList.empty();
+    $ingredientList.append($examples);
   });
 };
 
@@ -77,8 +78,9 @@ var handleFormSubmit = function(event) {
     return;
   }
 
-  API.saveIngredient(ingredient).then(function() {
-    refreshExamples();
+  API.saveIngredient(ingredient).then(function(result) {
+    console.log(result)
+    refreshIngredients(result);
   });
 
   $ingredientAdded.val("");
@@ -93,13 +95,13 @@ var handleDeleteBtnClick = function() {
     .attr("data-id");
 
   API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
+    refreshIngredients();
   });
 };
 
 // Add event listeners to the submit and delete buttons
 $submitBtn.on("submit", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
+$ingredientList.on("click", ".delete", handleDeleteBtnClick);
 
 
 

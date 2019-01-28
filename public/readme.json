@@ -1,0 +1,62 @@
+{
+ "name": "flare",
+ "children": [
+  {
+   "name": "Total calories",
+   "children": [
+    {
+        "name": "Meal 1",
+        "children": [
+            {"name": "Ingredient 1", "size": 50},
+            {"name": "Ingredient 2", "size": 100},
+            {"name": "Ingredient 3", "size": 80},
+            {"name": "Ingredient 4", "size": 120}
+        ]
+    },
+    {
+        "name": "Meal 2",
+        "children": [
+            {"name": "Ingredient 1", "size": 150},
+            {"name": "Ingredient 2", "size": 90},
+            {"name": "Ingredient 3", "size": 100}
+        ]
+    },
+    {
+        "name": "Meal 3",
+        "children": [
+            {"name": "Ingredient 1", "size": 50},
+            {"name": "Ingredient 2", "size": 100},
+            {"name": "Ingredient 3", "size": 80},
+            {"name": "Ingredient 4", "size": 120},
+            {"name": "Ingredient 5", "size": 30},
+            {"name": "Ingredient 6", "size": 150}
+        ]
+    },
+    {
+        "name": "Meal 4",
+        "children": [
+            {"name": "Ingredient 1", "size": 150},
+            {"name": "Ingredient 2", "size": 100},
+            {"name": "Ingredient 3", "size": 80},
+            {"name": "Ingredient 4", "size": 110}
+        ]
+    },
+    {
+        "name": "Meal 5",
+        "children": [
+            {"name": "Ingredient 1", "size": 200},
+            {"name": "Ingredient 2", "size": 100},
+            {"name": "Ingredient 3", "size": 80}
+        ]
+    },
+    {
+        "name": "Meal 6",
+        "children": [
+            {"name": "Ingredient 1", "size": 250}
+
+        ]
+    }
+   ]
+  }
+ ]
+}

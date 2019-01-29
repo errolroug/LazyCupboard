@@ -3,13 +3,12 @@ var db = require("../models");
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
-    // db.Example.findAll({}).then(function(dbExamples) {
-      res.render("index", {
-        msg: "Welcome!",
-        msg2:"Under Construction, please come back soon :)"
-        // examples: dbExamples
-      });
-    // });
+        db.Ingredients.findAll()
+        .then(function(dbIngredient) {
+          // data returned is an array. Need to wrap it in an object to send to handlebars
+          let hbIngredients = {dbIngredient};  
+          res.render("index", hbIngredients)
+        }); 
   });
 
 

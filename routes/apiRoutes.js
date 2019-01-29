@@ -43,6 +43,7 @@ module.exports = function(app) {
               ingredientArray.push("Fat: " + response.data.parsed[0].food.nutrients.FAT);
               ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
 
+
               //Send ingredient array to browser
               res.json(ingredientArray);
             }

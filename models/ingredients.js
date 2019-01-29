@@ -12,11 +12,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 0,
       validate: { min: 0 }
-    },
-    measurementId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     }
+
   });
+
+  Ingredients.associate = function(models) {
+      // an ingredient belongs to a measurement if applicable, otherwise quantity = # of that ingredient
+      Ingredients.belongsTo(models.Measurements, {
+          foreignKey: {
+              allowNull: true
+          }
+      });
+  };
+
   return Ingredients;
 };

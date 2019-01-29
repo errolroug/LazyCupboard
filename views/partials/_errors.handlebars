@@ -1,0 +1,10 @@
+{{!-- if error with login --}}
+{{#if error}}
+<div> {{error}}</div>
+{{/if}}
+
+{{!-- if error with registration --}}
+{{#each errors}}
+<div> {{text}}</div>
+{{else}}
+{{/each}}

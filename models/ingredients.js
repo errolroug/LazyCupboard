@@ -7,6 +7,10 @@ module.exports = function(sequelize, DataTypes) {
         len: [1, 140]
       }
     },
+    user: {
+      type: DataTypes.STRING,
+      allowedNull: false
+    },
     quantity: {
       type: DataTypes.FLOAT,
       allowNull: false,

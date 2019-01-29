@@ -3,8 +3,22 @@ var axios = require("axios")
 
 module.exports = function(app) {
 
-    app.get("/api/ingredients", function(req, res) {
-        db.Ingredients.findAll().then(function(dbIngredient) {
+    app.get("/api/ingredients/", function(req, res) {
+        db.Ingredients.findAll({
+            include: [db.Measurements]
+        }).then(function(dbIngredient) {
+          res.json(dbIngredient);
+        });
+    });
+
+
+    app.get("/api/ingredients/:id", function(req, res) {
+        db.Ingredients.findOne({
+            where: {
+                id: req.params.id
+            },
+            include: [db.Measurements]
+        }).then(function(dbIngredient) {
           res.json(dbIngredient);
         });
     });
@@ -42,7 +56,6 @@ module.exports = function(app) {
               ingredientArray.push("Protein: " + response.data.parsed[0].food.nutrients.PROCNT);
               ingredientArray.push("Fat: " + response.data.parsed[0].food.nutrients.FAT);
               ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
-
 
               //Send ingredient array to browser
               res.json(ingredientArray);

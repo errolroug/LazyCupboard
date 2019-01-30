@@ -1,0 +1,30 @@
+
+    <table class="highlight responsive-table" id="ingredient-list">
+
+        <thead>
+            <tr>
+                <th></th>
+                <th><h5>Ingredients Available</h5></th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{#each dbIngredient}}        
+                <tr data-id="{{this.dataValues.id}}">
+                    <td>                        <p>
+                            <label>
+                                <input type="checkbox" {{checked}}/><span></span>
+                            </label>
+                        </p>
+                    </td>
+                    <td><a href="ingredient/{{this.dataValues.id}}">{{this.name}}</a></td>
+                    <td><button id={{id}} class="btn-floating btn-small scale-transition">
+                        <i class="material-icons">remove</i>
+                        </button>
+                    </td>
+                </tr>
+            {{/each}}                
+        </tbody>
+
+    </table>

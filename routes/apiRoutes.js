@@ -47,22 +47,43 @@ module.exports = function(app) {
     // This line is just to help us debug against the actual URL.
     // console.log(queryUrl);
     axios.get(queryUrl).then(
-            function (response) {
-              var ingredientArray = [];
+        function (response) {
+            var ingredientArray = [];
 
-              //Push API response to ingredient array  
-              ingredientArray.push("Label: " + response.data.parsed[0].food.label);
-              ingredientArray.push("Cal: " + response.data.parsed[0].food.nutrients.ENERC_KCAL);
-              ingredientArray.push("Protein: " + response.data.parsed[0].food.nutrients.PROCNT);
-              ingredientArray.push("Fat: " + response.data.parsed[0].food.nutrients.FAT);
-              ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
+            ingredient = {
+                name: response.data.parsed[0].food.label,
+                calories: response.data.parsed[0].food.nutrients.ENERC_KCAL,
+                protein: response.data.parsed[0].food.nutrients.PROCNT,
+                fat: response.data.parsed[0].food.nutrients.FAT,
+                carbs: response.data.parsed[0].food.nutrients.CHOCDF   
+            }
 
-              //Send ingredient array to browser
-              res.json(ingredientArray);
+            db.Ingredients.create(ingredient).then(function(newIngredient) {
+                res.status(200).send('OK')
+            })
+            .catch(function (error) {
+                if (error) {
+                    res.status(500).send('Internal Server Error')
+                    console.log("Ingredient Could not be inserted into DB")
+                };
+            });
+
+
+
+            //   //Push API response to ingredient array  
+            //   ingredientArray.push("Label: " + response.data.parsed[0].food.label);
+            //   ingredientArray.push("Cal: " + response.data.parsed[0].food.nutrients.ENERC_KCAL);
+            //   ingredientArray.push("Protein: " + response.data.parsed[0].food.nutrients.PROCNT);
+            //   ingredientArray.push("Fat: " + response.data.parsed[0].food.nutrients.FAT);
+            //   ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
+
+            //   //Send ingredient array to browser
+            //   res.json(ingredientArray);
             }
         )
         .catch(function (error) {
             if (error) {
+                res.status(500).send('Internal Server Error')
                 console.log("NO RESULTS FOUND")
             };
         });

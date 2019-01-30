@@ -37,15 +37,15 @@ var API = {
 var refreshIngredients = function() {
   API.getIngredients().then(function(data) {
     console.log(data)
-    var $examples = data.map(function(example) {
+    var $ingredients = data.map(function(data) {
       var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
+        .text(data.name)
+        .attr("href", "/ingredient/" + data.id);
 
       var $li = $("<li>")
         .attr({
           class: "list-group-item",
-          "data-id": example.id
+          "data-id": data.id
         })
         .append($a);
 
@@ -59,7 +59,7 @@ var refreshIngredients = function() {
     });
 
     $ingredientList.empty();
-    $ingredientList.append($examples);
+    $ingredientList.append($ingredients);
   });
 };
 

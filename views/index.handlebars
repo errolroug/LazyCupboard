@@ -7,6 +7,8 @@
 
         {{> ingredientform}}
 
+        {{> ingredientList}}
+
         {{!--  <form class="clearfix mb-4" action="POST">
           <div class="form-group">
             <label for="example-text">Example Text</label>
@@ -18,17 +20,7 @@
           </div>
           <button id="submit" class="btn btn-primary float-right">Submit</button>
         </form> --}}
-        <h5>Ingredients Available:</h5>
 
-        <ul id="ingredient-list" class="list-group">
-          {{#each dbIngredient}}
-          
-          <li data-id="{{this.dataValues.id}}" class="list-group-item">
-            <a href="example/{{this.dataValues.id}}">{{this.dataValues.name}}</a>
-            <button class="btn btn-danger float-right delete">ｘ</button>
-          </li>
-          {{/each}}
-        </ul> 
       </div>
     </div>
   </div>

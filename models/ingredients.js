@@ -10,10 +10,21 @@ module.exports = function(sequelize, DataTypes) {
     quantity: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 1,
       validate: { min: 0 }
+    },
+    calories: {
+      type: DataTypes.INTEGER,
+      allowNull:false
+    },
+    fat: {
+      type: DataTypes.INTEGER,
+      allowNull:true
+    },
+    carbs: {
+      type: DataTypes.INTEGER,
+      allowNull:true
     }
-
   });
 
   Ingredients.associate = function(models) {

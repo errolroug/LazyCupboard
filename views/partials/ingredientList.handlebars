@@ -1,13 +1,32 @@
-<h5>Ingredients Available:</h5>
 
-<ul id="ingredient-list" class="list-group">
+<div class="container-ingredient-list">
+    <table class="highlight responsive-table" id="ingredient-list">
 
-    {{#each dbIngredient}}
-    
-    <li data-id="{{this.dataValues.id}}" class="list-group-item">
-    <a href="ingredient/{{this.dataValues.id}}">{{this.name}}</a>
-    <button class="btn btn-danger float-right delete">ｘ</button>
-    </li>
-    {{/each}}
+        <thead>
+            <tr>
+                <th></th>
+                <th><h5>Ingredients Available</h5></th>
+                <th>Remove</th>
+            </tr>
+        </thead>
 
-</ul> 
+        <tbody>
+            {{#each dbIngredient}}        
+                <tr data-id="{{this.dataValues.id}}">
+                    <td>                        <p>
+                            <label>
+                                <input type="checkbox" {{checked}}/><span></span>
+                            </label>
+                        </p>
+                    </td>
+                    <td><a href="ingredient/{{this.dataValues.id}}">{{this.name}}</a></td>
+                    <td><button id={{id}} class="btn-floating btn-small scale-transition">
+                        <i class="material-icons">remove</i>
+                        </button>
+                    </td>
+                </tr>
+            {{/each}}                
+        </tbody>
+
+    </table>
+</div>

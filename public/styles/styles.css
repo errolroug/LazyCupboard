@@ -29,3 +29,15 @@
   width: 150px;
   margin: auto;
 }
+.container-ingredient-list{
+	width: 35%;
+	padding: 10px;
+	float: left;
+}
+
+.container-meal-list{
+	width: 60%;
+	margin-left: 5%;
+	padding: 10px;
+	float: left;
+}

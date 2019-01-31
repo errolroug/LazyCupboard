@@ -8,4 +8,3 @@ cache:
     - node_modules
 before_install:
   - mysql -e 'CREATE DATABASE testdb;'
-  - mysql -e 'CREATE DATABASE lazycupboard_db;'

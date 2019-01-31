@@ -1,0 +1,23 @@
+
+
+    <table class="highlight responsive-table" id="meal-list">
+
+        <thead>
+            <tr>
+                <th><h5>Meals List</h5></th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{#each dbMeals}}        
+                <tr data-id="{{this.dataValues.id}}">
+                    <td><a href="meals/{{this.dataValues.id}}">{{this.name}}</a></td>
+                    <td><button id={{id}} class="btn-floating btn-small scale-transition">
+                        <i class="material-icons">remove</i>
+                        </button>
+                    </td>
+                </tr>
+            {{/each}}                
+        </tbody>
+    </table>

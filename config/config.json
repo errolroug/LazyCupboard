@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "123456",
+    "password": "1234Asdf!",
     "database": "lazyCupboard_db",
     "host": "localhost",
     "dialect": "mysql"

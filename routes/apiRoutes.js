@@ -1,147 +1,137 @@
+// REQUIRE MODELS FOLDER WHICH CONTAIN TABLE MODELS
 var db = require("../models");
+
+// REQUIRE AXIOS FOR API CALL - Need to remove this later once API call is saved in a separate file
 var axios = require("axios");
 
-module.exports = function(app) {
-  app.get("/api/ingredients/", function(req, res) {
-    db.Ingredients.findAll({
-      include: [db.Measurements]
-    }).then(function(dbIngredient) {
-      res.json(dbIngredient);
+
+
+
+module.exports = function (app) {
+
+    // GET ALL INGREDIENTS SAVED TO THE 'INGREDIENTS' TABLE 
+    // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below. 
+
+    app.get("/api/ingredients/", function (req, res) {
+        db.Ingredients.findAll({ //1. Go to the models folder, use the Ingredients table and find all data
+            include: [db.Measurements] //2. Join the Measurements table to the Ingredients table 
+        }).then(function (dbIngredient) {
+            res.json(dbIngredient); //3. Send all info from 1 & 3 in a json response
+        });
+
     });
   });
 
-  app.get("/api/ingredients/:id", function(req, res) {
-    db.Ingredients.findOne({
-      where: {
-        id: req.params.id
-      },
-      include: [db.Measurements]
-    }).then(function(dbIngredient) {
-      res.json(dbIngredient);
+
+
+    // GET A SINGLE INGREDIENT SAVED TO THE 'INGREDIENTS' TABLE 
+    // See a single ingredient in json format vai the browser by using the site url + the route specified in the GET request below. 
+
+    app.get("/api/ingredients/:id", function (req, res) {
+        db.Ingredients.findOne({ //1. Go to the models folder, use the Ingredients table and find one record 
+            where: {
+                id: req.params.id //2. Record must match the id specified by the user in the url of the GET request
+            },
+            include: [db.Measurements]
+        }).then(function (dbIngredient) { //3. Join the Measurements table to the Ingredients table 
+            res.json(dbIngredient); //4. Send all info from 1 & 3 in a json response
+        });
     });
-  });
 
-  // Get individual ingredient nutritional value info via API call to Edamam
-  app.post("/api/ingredientsAPI", function(req, res) {
-    //console log what we are receiving from the front end
-    console.log(req.body);
 
-    // var html = "<h1>INGREDIENT API RESPONSE(S)</h1>";
 
-    //insert ingredient into the variable:
-    var food = req.body.ingredient;
+    // POST INGREDIENT TO 'INGREDIENT' TABLE
+    // You do not render data in a browser using a POST request, this route is only being used to send info to the db.
+    // To view the data in the db, use the GET request for ingredients above.
 
-    //NOTE: This ID is exclusively used for individual food item lookup
-    var queryID = "80dab669";
+    app.post("/api/ingredientsAPI", function (req, res) {
 
-    //NOTE: This key is exclusively used for individual food item lookup
-    var queryKey = "bf81be851f5f242c3a6279af40337e79";
+        var food = req.body.ingredient; //1. Save ingredient entered by user into the 'food' variable
+        var queryID = "80dab669"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
+        var queryKey = "bf81be851f5f242c3a6279af40337e79"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
 
-    // Run a request with axios to the Edamam API with the food item specified by var food
-    //NOTE: You can add additional parameters to this request, see documentation
-    var queryUrl =
-      "https://api.edamam.com/api/food-database/parser?app_id=" +
-      queryID +
-      "&app_key=" +
-      queryKey +
-      "&ingr=" +
-      food;
+        // Run a request with axios to the Edamam API with the food item specified by var food
+        //NOTE: You can add additional parameters to this request, see documentation 
+        var queryUrl = "https://api.edamam.com/api/food-database/parser?app_id=" + queryID + "&app_key=" + queryKey + "&ingr=" + food;
 
-    // This line is just to help us debug against the actual URL.
-    // console.log(queryUrl);
-    axios
-      .get(queryUrl)
-      .then(function(response) {
-        var ingredientArray = [];
+        axios.get(queryUrl).then(
+                function (response) {
+                    var foodLabel = response.data.parsed[0].food.label;
+                    var foodLabelName = foodLabel.split(",");
+                    var foodCalories = response.data.parsed[0].food.nutrients.ENERC_KCAL;
+                    var foodProtein = response.data.parsed[0].food.nutrients.PROCNT;
+                    var foodFat = response.data.parsed[0].food.nutrients.FAT;
+                    var foodCarbs = response.data.parsed[0].food.nutrients.CHOCDF
 
-        ingredient = {
-          name: response.data.parsed[0].food.label,
-          calories: response.data.parsed[0].food.nutrients.ENERC_KCAL,
-          protein: response.data.parsed[0].food.nutrients.PROCNT,
-          fat: response.data.parsed[0].food.nutrients.FAT,
-          carbs: response.data.parsed[0].food.nutrients.CHOCDF
-        };
+                    //Create ingredient object to store the data being returned by the API call
+                    ingredient = {
+                        name: foodLabelName[0],
+                        calories: foodCalories,
+                        protein: foodProtein,
+                        fat: foodFat,
+                        carbs: foodCarbs
+                    }
 
-        db.Ingredients.create(ingredient)
-          .then(function(newIngredient) {
-            res.status(200).send("OK");
-          })
-          .catch(function(error) {
-            if (error) {
-              res.status(500).send("Internal Server Error");
-              console.log("Ingredient Could not be inserted into DB");
-            }
-          });
+                    //Use the models (located in the models folder) to create a model for ingredients
+                    db.Ingredients.create(ingredient).then(function (newIngredient) {
+                            res.status(200).send('OK')
+                        })
+                        .catch(function (error) {
+                            if (error) {
+                                res.status(500).send('Internal Server Error')
+                                console.log("Ingredient Could not be inserted into DB")
+                            };
+                        });
 
-        //   //Push API response to ingredient array
-        //   ingredientArray.push("Label: " + response.data.parsed[0].food.label);
-        //   ingredientArray.push("Cal: " + response.data.parsed[0].food.nutrients.ENERC_KCAL);
-        //   ingredientArray.push("Protein: " + response.data.parsed[0].food.nutrients.PROCNT);
-        //   ingredientArray.push("Fat: " + response.data.parsed[0].food.nutrients.FAT);
-        //   ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
+                }
+            )
+            .catch(function (error) {
+                if (error) {
+                    res.status(500).send('Internal Server Error')
+                    console.log("NO RESULTS FOUND")
+                };
+            });
 
-        //   //Send ingredient array to browser
-        //   res.json(ingredientArray);
-      })
-      .catch(function(error) {
-        if (error) {
-          res.status(500).send("Internal Server Error");
-          console.log("NO RESULTS FOUND");
-        }
-      });
-  });
 
-  // Get recipes and nutritional info via API call to Edamam
-  app.post("/recipesAPI", function(req, res) {
-    // Create an empty variable for holding the movie name
-    var food = "chicken";
+    });
 
-    //NOTE: This ID is exclusively used for individual food item lookup
-    var queryID = "fcb72d93";
 
-    //NOTE: This key is exclusively used for individual food item lookup
-    var queryKey = "f10388ab91215f04c2c1a28330336b8d";
+    // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
+    app.post("/recipesAPI", function (req, res) {
+        var food = "chicken"; //1. Save ingredients required for receipe search                       
+        var queryID = "fcb72d93"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
+        var queryKey = "f10388ab91215f04c2c1a28330336b8d"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
 
-    // Then run a request with axios to the Edamam API with the movie specified
-    //NOTE: You can add additional parameters to this request, see documentation
-    var queryUrl =
-      "https://api.edamam.com/search?q=" +
-      food +
-      "&app_id=" +
-      queryID +
-      "&app_key=" +
-      queryKey;
+        // Then run a request with axios to the Edamam API with the movie specified
+        //NOTE: You can add additional parameters to this request, see documentation 
+        var queryUrl = "https://api.edamam.com/search?q=" + food + "&app_id=" + queryID + "&app_key=" + queryKey;
 
-    // This line is just to help us debug against the actual URL.
-    // console.log(queryUrl);
-    axios
-      .get(queryUrl)
-      .then(function(response) {
-        // Recipes array
-        var recipeArray = [];
+        axios.get(queryUrl).then(
+                function (response) {
 
-        for (let index = 0; index < response.data.hits.length; index++) {
-          recipeArray.push(response.data.hits[index].recipe.label);
-          recipeArray.push(response.data.hits[index].recipe.ingredientLines);
-          recipeArray.push(response.data.hits[index].recipe.totalNutrients);
-        }
-        //Send API response to browser
-        res.json(recipeArray);
-      })
-      .catch(function(error) {
-        if (error) {
-          console.log("NO RESULTS FOUND");
-        }
-      });
-  });
+                    for (let index = 0; index < response.data.hits.length; index++) {
 
-  //COMMENTING THIS OUT FOR NOW_________________________________________________________
-  // Will add back to the file once the first get request works
+                        recipe = {
+                            name: response.data.hits[index].recipe.label,
+                            ingredients: response.data.hits[index].recipe.ingredientLines,
+                            nutrition: response.data.hits[index].recipe.totalNutrients
+                        }
+                    }
+                }
+            )
+            .catch(function (error) {
+                if (error) {
+                    console.log("NO RESULTS FOUND")
+                };
+            });
+    });
 
-  // // Delete an example by id
-  // app.delete("/api/examples/:id", function(req, res) {
-  //   db.Example.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
-  //     res.json(dbExample);
-  //   });
-  // });
+    //COMMENTING THIS OUT FOR NOW_________________________________________________________
+    // Will add back to the file once the first get request works
+    // // Delete an example by id
+    // app.delete("/api/examples/:id", function(req, res) {
+    //   db.Example.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
+    //     res.json(dbExample);
+    //   });
+    // });
 };

@@ -23,6 +23,13 @@ require("./config/passport");
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(function(req, res, next) {
+  // res.locals.sucess_msg = req.flash("success_msg");
+  // res.locals.error_msg = req.flash("error_msg");
+  res.locals.user = req.user || null;
+  next();
+});
+
 // Handlebars
 app.engine(
   "handlebars",
@@ -36,12 +43,7 @@ app.set("view engine", "handlebars");
 require("./routes/apiRoutes")(app);
 require("./routes/htmlRoutes")(app);
 // Global variables
-app.use(function(req, res, next) {
-  // res.locals.sucess_msg = req.flash("success_msg");
-  // res.locals.error_msg = req.flash("error_msg");
-  res.locals.user = req.user || null;
-  next();
-});
+
 
 var syncOptions = { force: false };
 

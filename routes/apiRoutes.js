@@ -68,17 +68,6 @@ module.exports = function(app) {
                 };
             });
 
-
-
-            //   //Push API response to ingredient array  
-            //   ingredientArray.push("Label: " + response.data.parsed[0].food.label);
-            //   ingredientArray.push("Cal: " + response.data.parsed[0].food.nutrients.ENERC_KCAL);
-            //   ingredientArray.push("Protein: " + response.data.parsed[0].food.nutrients.PROCNT);
-            //   ingredientArray.push("Fat: " + response.data.parsed[0].food.nutrients.FAT);
-            //   ingredientArray.push("Carbs: " + response.data.parsed[0].food.nutrients.CHOCDF);
-
-            //   //Send ingredient array to browser
-            //   res.json(ingredientArray);
             }
         )
         .catch(function (error) {

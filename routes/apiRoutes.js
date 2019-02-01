@@ -2,7 +2,7 @@
 var db = require("../models");
 
 // REQUIRE AXIOS FOR API CALL - Need to remove this later once API call is saved in a separate file
-var axios = require("axios")
+var axios = require("axios");
 
 
 
@@ -18,7 +18,9 @@ module.exports = function (app) {
         }).then(function (dbIngredient) {
             res.json(dbIngredient); //3. Send all info from 1 & 3 in a json response
         });
+
     });
+  });
 
 
 
@@ -126,7 +128,6 @@ module.exports = function (app) {
 
     //COMMENTING THIS OUT FOR NOW_________________________________________________________
     // Will add back to the file once the first get request works
-
     // // Delete an example by id
     // app.delete("/api/examples/:id", function(req, res) {
     //   db.Example.destroy({ where: { id: req.params.id } }).then(function(dbExample) {

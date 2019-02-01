@@ -2,7 +2,6 @@ const LocalStrategy = require("passport-local");
 const passport = require("passport");
 const db = require("../models/index");
 
-
 passport.use(
   new LocalStrategy(
     {

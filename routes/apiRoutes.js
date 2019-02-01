@@ -13,10 +13,10 @@ module.exports = function (app) {
     // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below. 
 
     app.get("/api/ingredients/", function (req, res) {
-        db.Ingredients.findAll({ //1. Go to the models folder, use the Ingredients table and find all data
-            include: [db.Measurements] //2. Join the Measurements table to the Ingredients table 
+        db.Ingredients.findAll({                            //1. Go to the models folder, use the Ingredients table and find all data
+            include: [db.Measurements]                      //2. Join the Measurements table to the Ingredients table 
         }).then(function (dbIngredient) {
-            res.json(dbIngredient); //3. Send all info from 1 & 3 in a json response
+            res.json(dbIngredient);                         //3. Send all info from 1 & 3 in a json response
         });
     });
 
@@ -26,13 +26,13 @@ module.exports = function (app) {
     // See a single ingredient in json format vai the browser by using the site url + the route specified in the GET request below. 
 
     app.get("/api/ingredients/:id", function (req, res) {
-        db.Ingredients.findOne({ //1. Go to the models folder, use the Ingredients table and find one record 
+        db.Ingredients.findOne({                            //1. Go to the models folder, use the Ingredients table and find one record 
             where: {
-                id: req.params.id //2. Record must match the id specified by the user in the url of the GET request
+                id: req.params.id                           //2. Record must match the id specified by the user in the url of the GET request
             },
             include: [db.Measurements]
-        }).then(function (dbIngredient) { //3. Join the Measurements table to the Ingredients table 
-            res.json(dbIngredient); //4. Send all info from 1 & 3 in a json response
+        }).then(function (dbIngredient) {                   //3. Join the Measurements table to the Ingredients table 
+            res.json(dbIngredient);                         //4. Send all info from 1 & 3 in a json response
         });
     });
 
@@ -44,9 +44,9 @@ module.exports = function (app) {
 
     app.post("/api/ingredientsAPI", function (req, res) {
 
-        var food = req.body.ingredient; //1. Save ingredient entered by user into the 'food' variable
-        var queryID = "80dab669"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
-        var queryKey = "bf81be851f5f242c3a6279af40337e79"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
+        var food = req.body.ingredient;                     //1. Save ingredient entered by user into the 'food' variable
+        var queryID = "80dab669";                           //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
+        var queryKey = "bf81be851f5f242c3a6279af40337e79";  //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
 
         // Run a request with axios to the Edamam API with the food item specified by var food
         //NOTE: You can add additional parameters to this request, see documentation 
@@ -96,9 +96,9 @@ module.exports = function (app) {
 
     // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
     app.post("/recipesAPI", function (req, res) {
-        var food = "chicken"; //1. Save ingredients required for receipe search                       
-        var queryID = "fcb72d93"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
-        var queryKey = "f10388ab91215f04c2c1a28330336b8d"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
+        var food = "chicken";                               //1. Save ingredients required for receipe search                       
+        var queryID = "fcb72d93";                           //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
+        var queryKey = "f10388ab91215f04c2c1a28330336b8d";  //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
 
         // Then run a request with axios to the Edamam API with the movie specified
         //NOTE: You can add additional parameters to this request, see documentation 

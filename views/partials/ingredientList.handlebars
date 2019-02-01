@@ -4,7 +4,11 @@
         <thead>
             <tr>
                 <th></th>
-                <th><h5>Ingredients Available</h5></th>
+                <th>Ingredient</th>
+                <th>Calories</th>
+                <th>Protein</th>
+                <th>Fat</th>
+                <th>Carbs</th>
                 <th>Remove</th>
             </tr>
         </thead>
@@ -19,6 +23,10 @@
                         </p>
                     </td>
                     <td><a href="ingredient/{{this.dataValues.id}}">{{this.name}}</a></td>
+                    <td>{{this.calories}}</td>
+                    <td>{{this.protein}}</td>
+                    <td>{{this.fat}}</td>
+                    <td>{{this.carbs}}</td>
                     <td><button id={{id}} class="btn-floating btn-small scale-transition">
                         <i class="material-icons">remove</i>
                         </button>

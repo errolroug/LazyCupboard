@@ -94,7 +94,9 @@ module.exports = function(app) {
           //into database, 10 is number of characters
           bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) throw err;
+              if (err) {
+                throw err;
+              }
               //set new user password to hash value
               newUser.password = hash;
 

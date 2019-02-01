@@ -23,7 +23,7 @@ describe("POST /api/ingredients", function() {
       name: "Example text",
       calories: 100,
       fat: 40,
-      carbs:20
+      carbs: 20
     };
 
     // POST the request body to the server

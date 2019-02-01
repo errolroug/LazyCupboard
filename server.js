@@ -23,9 +23,14 @@ require("./config/passport");
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+//this are Global Variables. The one for the user needs to be explicit right after 
+//the middleware of session and before any route is called:
 app.use(function(req, res, next) {
   // res.locals.sucess_msg = req.flash("success_msg");
   // res.locals.error_msg = req.flash("error_msg");
+
+  //this MUST be declared before any route otherwise the user won't be send to the front end
   res.locals.user = req.user || null;
   next();
 });
@@ -42,8 +47,6 @@ app.set("view engine", "handlebars");
 // Routes
 require("./routes/apiRoutes")(app);
 require("./routes/htmlRoutes")(app);
-// Global variables
-
 
 var syncOptions = { force: false };
 

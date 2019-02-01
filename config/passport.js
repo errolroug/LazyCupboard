@@ -39,12 +39,13 @@ passport.use(
   )
 );
 
+//Serialize will basically stored the user ID to session
 passport.serializeUser(function(user, done) {
   done(null, user.dataValues.id); 
- // where is this user.id going? Are we supposed to access this anywhere?
 });
 
 
+//Deserialize will then grab the ID stored in session and get the user info when needed
 passport.deserializeUser(function(id, done) {
   db.User.findById(id).then(function(user) {
     if (user) {
@@ -57,27 +58,5 @@ passport.deserializeUser(function(id, done) {
   });
 
 });
-
-// // used to deserialize the user
-// passport.deserializeUser(function(id, done) {
-//   console.log("deserialized")
-//   console.log(id)
-
-//   db.User.findOne({where: {id: id}}, function (user, done){
-//        console.log("result is coming back")
-
-//     done(err, user);
-//   });
-//   // db.User.findById(id, function(err, user) {
-//   // });
-// });
-
-// passport.serializeUser(function(user, cb) {
-//   cb(null, user);
-// });
-
-// passport.deserializeUser(function(obj, cb) {
-//   cb(null, obj);
-// });
 
 module.exports = passport;

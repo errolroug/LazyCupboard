@@ -5,7 +5,7 @@ const passport = require("../config/passport");
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
-    db.Ingredients.findAll().then(function(dbIngredient) {
+    db.Ingredients.findAll().then(function(dbIngredient, dbMeals) {
       // data returned is an array. Need to wrap it in an object to send to handlebars
       let hbIngredients = { dbIngredient };
       res.render("index", hbIngredients);

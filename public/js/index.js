@@ -100,21 +100,19 @@ $(document).ready(function() {
     });
   };
 
-  var removeIngredient = function (){
-
-    console.log(this.id)
+  var removeIngredient = function() {
+    console.log(this.id);
 
     $.ajax({
       method: "DELETE",
       url: "/api/ingredient/" + this.id
     }).then(function(ingredients) {
-        refreshIngredients(ingredients)
-      });
-  }
+      refreshIngredients(ingredients);
+    });
+  };
 
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
   $ingredientList.on("click", ".delete", handleDeleteBtnClick);
   $ingredientRemove.on("click", removeIngredient);
-
 });

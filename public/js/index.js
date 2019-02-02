@@ -34,8 +34,8 @@ $(document).ready(function() {
     }
   };
 
-  // refresh ingredients and recipes and gets new examples from the db and repopulates the list
-  var refreshLists = function() {
+  // refresh ingredients and gets new examples from the db and repopulates the list
+  var refreshIngredients = function() {
     API.getIngredients().then(function(data) {
       console.log(data);
       var $ingredients = data.map(function(data) {
@@ -80,12 +80,7 @@ $(document).ready(function() {
 
     API.saveIngredient(ingredient).then(function(result) {
       console.log(result);
-      refreshLists(result);
-    });
-
-    API.saveRecipes(ingredient).then(function(result) {
-      console.log(result);
-      refreshLists(result);
+      refreshIngredients(result);
     });
 
     $ingredientAdded.val("");
@@ -100,7 +95,7 @@ $(document).ready(function() {
       .attr("data-id");
 
     API.deleteExample(idToDelete).then(function() {
-      refreshLists();
+      refreshIngredients();
     });
   };
 
@@ -111,7 +106,7 @@ $(document).ready(function() {
       method: "DELETE",
       url: "/api/ingredient/" + this.id
     }).then(function(ingredients) {
-      refreshLists(ingredients);
+      refreshIngredients(ingredients);
     });
   };
 

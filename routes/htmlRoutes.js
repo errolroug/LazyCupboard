@@ -1,10 +1,12 @@
 var db = require("../models");
 const bcrypt = require("bcryptjs");
 const passport = require("../config/passport");
+const {ensureAuthenticated} = require('../controllers/authController')
+
 
 module.exports = function(app) {
   // Load index page
-  app.get("/", function(req, res) {
+  app.get("/", ensureAuthenticated, function(req, res) {
     db.Ingredients.findAll().then(function(dbIngredient, dbMeals) {
       // data returned is an array. Need to wrap it in an object to send to handlebars
       let hbIngredients = { dbIngredient };
@@ -120,15 +122,11 @@ module.exports = function(app) {
   });
 
   //Logout User
-  app.get("/users/logout", (req, res) => {
-    res.logout();
-    // req.flash("success_msg", "You are logged out");
-    req.redirect("/users/login");
-  });
-  app // Render 404 page for any unmatched routes
-    .get("*", function(req, res) {
-      res.render("404");
-    });
+  app.get('/users/logout', (req, res)=>{
+    req.logout();
+    // req.flash('success_msg', 'you are logged out')
+    res.redirect('/users/login')
+  })
 
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {

@@ -107,12 +107,9 @@ $(document).ready(function() {
     $.ajax({
       method: "DELETE",
       url: "/api/ingredient/" + this.id
-    })
-      .then(function(ingredients) {
-        console.log ("Ingredient Deleted")
+    }).then(function(ingredients) {
         refreshIngredients(ingredients)
       });
-
   }
 
   // Add event listeners to the submit and delete buttons

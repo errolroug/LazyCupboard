@@ -7,7 +7,7 @@
     "start": "node server.js",
     "lint": "eslint **/*.js --quiet",
     "fix": "eslint --fix .",
-    "test": "npm run lint && NODE_ENV=test mocha -u tdd --reporter spec --exit"
+    "test": "npm run lint && cross-env NODE_ENV=test mocha -u tdd --reporter spec --exit"
   },
   "lint-staged": {
     "linters": {
@@ -40,6 +40,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^4.2.1",
+    "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.2",

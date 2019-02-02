@@ -22,16 +22,20 @@ describe("GET /api/ingredients", function() {
 
     db.Ingredients.bulkCreate([
       {
-        name: "Chicken Breasts",
+        name: "Chicken",
         quantity: 2,
-        MeasurementID: null,
+        // MeasurementID: null,
+        calories: 215,
+        fat: 15,
         createdAt: "2019-01-30 19:46:18",
         updatedAt: "2019-01-30 19:46:18"
       },
       {
         name: "Rice",
         quantity: 1,
-        MeasurementID: 1,
+        // MeasurementID: 1,
+        calories: 20,
+        fat: 7,
         createdAt: "2019-01-30 19:46:18",
         updatedAt: "2019-01-30 19:46:18"
       }
@@ -53,7 +57,7 @@ describe("GET /api/ingredients", function() {
 
         expect(responseBody[0])
           .to.be.an("object")
-          .that.includes({ name: "Chicken Breasts", quantity: 2 });
+          .that.includes({ name: "Chicken", quantity: 2 });
 
         expect(responseBody[1])
           .to.be.an("object")

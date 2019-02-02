@@ -6,7 +6,7 @@ $(document).ready(function() {
   var $ingredientType = $("#ingredient-type");
   var $submitBtn = $("#add-ingredient-form");
   var $ingredientList = $("#ingredient-list");
-  var $mealList = $("#meal-list");
+  var $ingredientRemove = $(".remove-ingredient");
 
   // The API object contains methods for each kind of request we'll make
   var API = {
@@ -31,37 +31,17 @@ $(document).ready(function() {
         url: "api/examples/" + id,
         type: "DELETE"
       });
-    },
-    saveRecipes: function(recipe) {
-      console.log("*************************************WORKING SAVERECIPES")
-      return $.ajax({
-        headers: {
-          "Content-Type": "application/json"
-        },
-        type: "POST",
-        url: "api/recipesAPI",
-        data: JSON.stringify(recipe)
-      });
-    },
-    getRecipes: function() {
-      return $.ajax({
-        url: "api/recipes",
-        type: "GET"
-      });
     }
-
   };
 
   // refresh ingredients and recipes and gets new examples from the db and repopulates the list
   var refreshLists = function() {
-
     API.getIngredients().then(function(data) {
       console.log(data);
       var $ingredients = data.map(function(data) {
         var $a = $("<a>")
           .text(data.name)
           .attr("href", "/ingredient/" + data.id);
-
         var $li = $("<li>")
           .attr({
             class: "list-group-item",
@@ -80,33 +60,6 @@ $(document).ready(function() {
 
       $ingredientList.empty();
       $ingredientList.append($ingredients);
-    });
-
-    API.getRecipes().then(function(data) {
-      console.log(data);
-      var $ingredients = data.map(function(data) {
-        var $a = $("<a>")
-          .text(data.name)
-          .attr("href", "/recipe/" + data.name);
-
-        var $li = $("<ul><li>")
-          .attr({
-            class: "list-group-item",
-            "data-id": data.name
-          })
-          .append($a);
-
-        var $button = $("<button>")
-          .addClass("btn btn-danger float-right delete")
-          .text("ｘ");
-
-        $li.append($button);
-
-        return $li;
-      });
-
-      $mealList.empty();
-      $mealList.append($ingredients);
     });
   };
 
@@ -151,7 +104,19 @@ $(document).ready(function() {
     });
   };
 
+  var removeIngredient = function() {
+    console.log(this.id);
+
+    $.ajax({
+      method: "DELETE",
+      url: "/api/ingredient/" + this.id
+    }).then(function(ingredients) {
+      refreshLists(ingredients);
+    });
+  };
+
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
   $ingredientList.on("click", ".delete", handleDeleteBtnClick);
+  $ingredientRemove.on("click", removeIngredient);
 });

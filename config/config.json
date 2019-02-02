@@ -1,14 +1,14 @@
 {
   "development": {
     "username": "root",
-    "password": "aegs0511",
-    "database": "lazyCupboard_db",
+    "password": "password",
+    "database": "lazycupboard_db",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "aegs0511",
+    "password": null,
     "database": "testdb",
     "host": "localhost",
     "dialect": "mysql",

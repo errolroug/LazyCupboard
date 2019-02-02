@@ -6,6 +6,7 @@ $(document).ready(function() {
   var $ingredientType = $("#ingredient-type");
   var $submitBtn = $("#add-ingredient-form");
   var $ingredientList = $("#ingredient-list");
+  var $ingredientRemove = $(".remove-ingredient");
 
   // The API object contains methods for each kind of request we'll make
   var API = {
@@ -99,7 +100,19 @@ $(document).ready(function() {
     });
   };
 
+  var removeIngredient = function() {
+    console.log(this.id);
+
+    $.ajax({
+      method: "DELETE",
+      url: "/api/ingredient/" + this.id
+    }).then(function(ingredients) {
+      refreshIngredients(ingredients);
+    });
+  };
+
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
   $ingredientList.on("click", ".delete", handleDeleteBtnClick);
+  $ingredientRemove.on("click", removeIngredient);
 });

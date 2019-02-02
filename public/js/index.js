@@ -6,6 +6,7 @@ $(document).ready(function() {
   var $ingredientType = $("#ingredient-type");
   var $submitBtn = $("#add-ingredient-form");
   var $ingredientList = $("#ingredient-list");
+  var $mealList = $("#meal-list");
 
   // The API object contains methods for each kind of request we'll make
   var API = {
@@ -30,11 +31,30 @@ $(document).ready(function() {
         url: "api/examples/" + id,
         type: "DELETE"
       });
+    },
+    saveRecipes: function(recipe) {
+      console.log("*************************************WORKING SAVERECIPES")
+      return $.ajax({
+        headers: {
+          "Content-Type": "application/json"
+        },
+        type: "POST",
+        url: "api/recipesAPI",
+        data: JSON.stringify(recipe)
+      });
+    },
+    getRecipes: function() {
+      return $.ajax({
+        url: "api/recipes",
+        type: "GET"
+      });
     }
+
   };
 
-  // refreshIngredients gets new examples from the db and repopulates the list
-  var refreshIngredients = function() {
+  // refresh ingredients and recipes and gets new examples from the db and repopulates the list
+  var refreshLists = function() {
+
     API.getIngredients().then(function(data) {
       console.log(data);
       var $ingredients = data.map(function(data) {
@@ -61,6 +81,33 @@ $(document).ready(function() {
       $ingredientList.empty();
       $ingredientList.append($ingredients);
     });
+
+    API.getRecipes().then(function(data) {
+      console.log(data);
+      var $ingredients = data.map(function(data) {
+        var $a = $("<a>")
+          .text(data.name)
+          .attr("href", "/recipe/" + data.name);
+
+        var $li = $("<ul><li>")
+          .attr({
+            class: "list-group-item",
+            "data-id": data.name
+          })
+          .append($a);
+
+        var $button = $("<button>")
+          .addClass("btn btn-danger float-right delete")
+          .text("ｘ");
+
+        $li.append($button);
+
+        return $li;
+      });
+
+      $mealList.empty();
+      $mealList.append($ingredients);
+    });
   };
 
   // handleFormSubmit is called whenever we submit a new example
@@ -80,7 +127,12 @@ $(document).ready(function() {
 
     API.saveIngredient(ingredient).then(function(result) {
       console.log(result);
-      refreshIngredients(result);
+      refreshLists(result);
+    });
+
+    API.saveRecipes(ingredient).then(function(result) {
+      console.log(result);
+      refreshLists(result);
     });
 
     $ingredientAdded.val("");
@@ -95,7 +147,7 @@ $(document).ready(function() {
       .attr("data-id");
 
     API.deleteExample(idToDelete).then(function() {
-      refreshIngredients();
+      refreshLists();
     });
   };
 

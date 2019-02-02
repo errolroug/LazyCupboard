@@ -4,20 +4,32 @@
 
         <thead>
             <tr>
-                <th><h5>Meals List</h5></th>
+                <th><h5>Recipes</h5></th>
                 <th>Remove</th>
             </tr>
         </thead>
 
         <tbody>
-            {{#each dbMeals}}        
+           {{#each dbRecipe}}        
                 <tr data-id="{{this.dataValues.id}}">
-                    <td><a href="meals/{{this.dataValues.id}}">{{this.name}}</a></td>
+                    <td>                        <p>
+                            <label>
+                                <input type="checkbox" {{checked}}/>
+                                <span></span>
+                            </label>
+                        </p>
+                    </td>
+
+                    <td><a href="recipes/{{this.dataValues.id}}">{{this.name}}</a></td>
+                    
+                    <td>{{this.ingredients}}</td>
+                    
                     <td><button id={{id}} class="btn-floating btn-small scale-transition">
                         <i class="material-icons">remove</i>
                         </button>
                     </td>
+                
                 </tr>
-            {{/each}}                
+            {{/each}}                 
         </tbody>
     </table>

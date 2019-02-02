@@ -91,23 +91,6 @@ module.exports = function(app) {
       });
   });
 
-  // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
-  // app.get("/api/recipes/", function(req, res) {
-  //   db.Recipes.findAll({}).then(function(dbRecipe) {
-  //     res.json(dbRecipe);
-  //   });
-  // });
-
-  app.get("/api/recipes/:id", function(req, res) {
-    db.Recipes.findOne({
-      where: {
-        id: req.params.id
-      }
-    }).then(function(dbRecipe) {
-      res.json(dbRecipe);
-    });
-  });
-
   app.post("/api/recipesAPI", function(req, res) {
     var food = req.body.ingredient;
     console.log("this is the ingredient" + food);
@@ -171,7 +154,6 @@ module.exports = function(app) {
   );
   //Register form
   app.post("/users/register", (req, res) => {
-    // console.log(req.body);
     let errors = [];
     if (req.body.password !== req.body.password2) {
       errors.push({ text: "Passwords do not match" });
@@ -247,8 +229,6 @@ module.exports = function(app) {
     res.redirect("/users/login");
   });
 
-  //COMMENTING THIS OUT FOR NOW_________________________________________________________
-  // Will add back to the file once the first get request works
   // Delete an example by id
   app.delete("/api/ingredient/:id", function(req, res) {
     db.Ingredients.destroy({ where: { id: req.params.id } }).then(function(

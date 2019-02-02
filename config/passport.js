@@ -18,21 +18,18 @@ passport.use(
       }).then(user => {
 
         if (!user) {
-          console.log("User not found")
+          console.log("User not found");
 
           return done(null, false, { message: "No user found" });
         }
         // match password
         else if (!user.validPassword(password)) {
-          console.log("Not user valid password")
+          console.log("Not user valid password");
 
           return done(null, false, {
             message: "Incorrest Password"
           });
         }
-       // console.log(user.dataValues.id)
-
-
         return done(null, user);
       });
     }

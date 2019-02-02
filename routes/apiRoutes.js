@@ -7,7 +7,6 @@ var db = require("../models");
 const bcrypt = require("bcryptjs");
 const passport = require("../config/passport");
 
-
 module.exports = function(app) {
   // GET ALL INGREDIENTS SAVED TO THE 'INGREDIENTS' TABLE
   // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below.
@@ -233,10 +232,12 @@ module.exports = function(app) {
 
   //COMMENTING THIS OUT FOR NOW_________________________________________________________
   // Will add back to the file once the first get request works
-  // // Delete an example by id
-  // app.delete("/api/examples/:id", function(req, res) {
-  //   db.Example.destroy({ where: { id: req.params.id } }).then(function(dbExample) {
-  //     res.json(dbExample);
-  //   });
-  // });
+  // Delete an example by id
+  app.delete("/api/ingredient/:id", function(req, res) {
+    db.Ingredients.destroy({ where: { id: req.params.id } }).then(function(
+      dbIngredient
+    ) {
+      res.json(dbIngredient);
+    });
+  });
 };

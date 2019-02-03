@@ -138,6 +138,8 @@ $(document).ready(function() {
   };
 
   var removeIngredient = function() {
+
+
     $.ajax({
       method: "DELETE",
       url: "/api/ingredient/" + this.id
@@ -149,7 +151,9 @@ $(document).ready(function() {
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
   $ingredientList.on("click", ".delete", handleDeleteBtnClick);
+
   //  $ingredientRemove.on("click", removeIngredient);
 
   $(document).on("click", ".remove-ingredient", removeIngredient);
+
 });

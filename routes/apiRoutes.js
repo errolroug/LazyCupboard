@@ -7,18 +7,21 @@ var axios = require("axios");
 // REQUIRE INGREDIENTS API SCRIPT FILE
 var ingredientsAPIscript = require("../public/js/ingredientsAPIscript");
 
+// REQUIRE RECIPES API SCRIPT FILE
+var recipesAPIscript = require("../public/js/recipesAPIscript");
+
 var db = require("../models");
 const bcrypt = require("bcryptjs");
 const passport = require("../config/passport");
 
-module.exports = function (app) {
+module.exports = function(app) {
   // GET ALL INGREDIENTS SAVED TO THE 'INGREDIENTS' TABLE
   // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below.
 
-  app.get("/api/ingredients/", function (req, res) {
+  app.get("/api/ingredients/", function(req, res) {
     db.Ingredients.findAll({
       include: [db.Measurements]
-    }).then(function (dbIngredient) {
+    }).then(function(dbIngredient) {
       res.json(dbIngredient);
     });
   });
@@ -26,13 +29,13 @@ module.exports = function (app) {
   // GET A SINGLE INGREDIENT SAVED TO THE 'INGREDIENTS' TABLE
   // See a single ingredient in json format vai the browser by using the site url + the route specified in the GET request below.
 
-  app.get("/api/ingredients/:id", function (req, res) {
+  app.get("/api/ingredients/:id", function(req, res) {
     db.Ingredients.findOne({
       where: {
         id: req.params.id
       },
       include: [db.Measurements]
-    }).then(function (dbIngredient) {
+    }).then(function(dbIngredient) {
       res.json(dbIngredient);
     });
   });
@@ -42,45 +45,14 @@ module.exports = function (app) {
   // To view the data in the db, use the GET request for ingredients above.
   app.post("/api/ingredientsAPI", ingredientsAPIscript);
 
-
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
-  app.post("/recipesAPI", function (req, res) {
-    var food = "chicken";
-    var queryID = "fcb72d93";
-    var queryKey = "f10388ab91215f04c2c1a28330336b8d";
+  app.post("/recipesAPI", recipesAPIscript);
 
-    // Then run a request with axios to the Edamam API with the movie specified
-    //NOTE: You can add additional parameters to this request, see documentation
-    var queryUrl =
-      "https://api.edamam.com/search?q=" +
-      food +
-      "&app_id=" +
-      queryID +
-      "&app_key=" +
-      queryKey;
-
-    axios
-      .get(queryUrl)
-      .then(function (response) {
-        for (let index = 0; index < response.data.hits.length; index++) {
-          recipe = {
-            name: response.data.hits[index].recipe.label,
-            ingredients: response.data.hits[index].recipe.ingredientLines,
-            nutrition: response.data.hits[index].recipe.totalNutrients
-          };
-        }
-      })
-      .catch(function (error) {
-        if (error) {
-          console.log("NO RESULTS FOUND");
-        }
-      });
-  });
-  app.get("/users/register", function (req, res) {
+  app.get("/users/register", function(req, res) {
     res.render("register");
   });
 
-  app.get("/users/login", function (req, res) {
+  app.get("/users/login", function(req, res) {
     res.render("login");
   });
   //login user route
@@ -190,14 +162,12 @@ module.exports = function (app) {
   //COMMENTING THIS OUT FOR NOW_________________________________________________________
   // Will add back to the file once the first get request works
   // Delete an example by id
-  app.delete("/api/ingredient/:id", function (req, res) {
+  app.delete("/api/ingredient/:id", function(req, res) {
     db.Ingredients.destroy({
       where: {
         id: req.params.id
       }
-    }).then(function (
-      dbIngredient
-    ) {
+    }).then(function(dbIngredient) {
       res.json(dbIngredient);
     });
   });

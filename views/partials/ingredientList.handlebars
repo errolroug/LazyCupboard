@@ -13,14 +13,14 @@
             </tr>
         </thead>
 
-        <tbody>
+        <tbody id="tbody-ingredientList">
             {{#each dbIngredient}}        
-                <tr data-id="{{this.dataValues.id}}">
-                    <td>                        <p>
-                            <label>
-                                <input type="checkbox" {{checked}}/><span></span>
-                            </label>
-                        </p>
+                <tr dataID="{{this.dataValues.id}}">
+                    <td>                  
+                        <label>
+                            <input type="checkbox" {{checked}}/>
+                            <span></span>
+                        </label>
                     </td>
                     <td><a href="ingredient/{{this.dataValues.id}}">{{this.name}}</a></td>
                     <td>{{this.calories}}</td>

@@ -7,6 +7,7 @@ $(document).ready(function() {
   var $submitBtn = $("#add-ingredient-form");
   var $ingredientList = $("#ingredient-list");
   var $ingredientRemove = $(".remove-ingredient");
+  var $tbodyIngredientList = $("#tbody-ingredientList");
 
   // The API object contains methods for each kind of request we'll make
   var API = {
@@ -37,30 +38,66 @@ $(document).ready(function() {
   // refreshIngredients gets new examples from the db and repopulates the list
   var refreshIngredients = function() {
     API.getIngredients().then(function(data) {
-      console.log(data);
       var $ingredients = data.map(function(data) {
+        var $tr = $("<tr>");
+        $tr.attr({ dataID: data.id });
+        var td = $("<td>");
+        var label = $("<label>");
+        var span = $("<span>");
+
+        var input = $("<input>");
+
+        input.attr({ type: "checkbox" });
+        //input.attr(data.checked)
+        label.append(input);
+        label.append(span);
+
+        td.append(label);
+
+        $tr.append(td);
+
+        var td2 = $("<td>");
         var $a = $("<a>")
           .text(data.name)
           .attr("href", "/ingredient/" + data.id);
+        td2.append($a);
 
-        var $li = $("<li>")
-          .attr({
-            class: "list-group-item",
-            "data-id": data.id
-          })
-          .append($a);
+        $tr.append(td2);
 
-        var $button = $("<button>")
-          .addClass("btn btn-danger float-right delete")
-          .text("ｘ");
+        var td3 = $("<td>").text(data.calories);
+        $tr.append(td3);
 
-        $li.append($button);
+        var td4 = $("<td>").text(data.protein);
+        $tr.append(td4);
 
-        return $li;
+        var td5 = $("<td>").text(data.fat);
+        $tr.append(td5);
+
+        var td6 = $("<td>").text(data.carbs);
+        $tr.append(td6);
+
+        var $button = $("<button>").addClass(
+          "btn-floating btn-small scale-transition remove-ingredient"
+        );
+        $button.attr({ id: data.id });
+        var iclass = $("<i>")
+          .addClass("material-icons")
+          .text("remove");
+
+        $button.append(iclass);
+        var $td7 = $("<td>");
+        $td7.append($button);
+        $tr.append($td7);
+
+        return $tr;
       });
+      // var $tbody = $("<tbody>").attr({ id: "tbody-ingredientList" });
+      // $tbody.append($ingredients)
 
-      $ingredientList.empty();
-      $ingredientList.append($ingredients);
+      // console.log($tbody)
+
+      $tbodyIngredientList.empty();
+      $tbodyIngredientList.append($ingredients);
     });
   };
 
@@ -101,7 +138,7 @@ $(document).ready(function() {
   };
 
   var removeIngredient = function() {
-    console.log(this.id);
+
 
     $.ajax({
       method: "DELETE",
@@ -114,5 +151,9 @@ $(document).ready(function() {
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
   $ingredientList.on("click", ".delete", handleDeleteBtnClick);
-  $ingredientRemove.on("click", removeIngredient);
+
+  //  $ingredientRemove.on("click", removeIngredient);
+
+  $(document).on("click", ".remove-ingredient", removeIngredient);
+
 });

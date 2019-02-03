@@ -43,12 +43,15 @@ $(document).ready(function() {
         $tr.attr({ dataID: data.id });
         var td = $("<td>");
         var label = $("<label>");
+        var span = $("<span>");
 
         var input = $("<input>");
 
         input.attr({ type: "checkbox" });
         //input.attr(data.checked)
         label.append(input);
+        label.append(span);
+
         td.append(label);
 
         $tr.append(td);

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
   $("select").formSelect();
 
   // Get references to page elements
@@ -11,7 +11,7 @@ $(document).ready(function() {
 
   // The API object contains methods for each kind of request we'll make
   var API = {
-    saveIngredient: function(ingredient) {
+    saveIngredient: function (ingredient) {
       return $.ajax({
         headers: {
           "Content-Type": "application/json"
@@ -21,24 +21,30 @@ $(document).ready(function() {
         data: JSON.stringify(ingredient)
       });
     },
-    getIngredients: function() {
+    getIngredients: function () {
       return $.ajax({
         url: "api/ingredients",
         type: "GET"
       });
     },
-    deleteExample: function(id) {
+    deleteExample: function (id) {
       return $.ajax({
         url: "api/examples/" + id,
         type: "DELETE"
       });
-    }
+    },
+    getRecipes: function () {
+      return $.ajax({
+        url: "api/recipesAPI",
+        type: "GET"
+      });
+    },
   };
 
   // refreshIngredients gets new examples from the db and repopulates the list
-  var refreshIngredients = function() {
-    API.getIngredients().then(function(data) {
-      var $ingredients = data.map(function(data) {
+  var refreshIngredients = function () {
+    API.getIngredients().then(function (data) {
+      var $ingredients = data.map(function (data) {
         var $tr = $("<tr>");
         $tr.attr({ dataID: data.id });
         var td = $("<td>");
@@ -48,7 +54,11 @@ $(document).ready(function() {
         var input = $("<input>");
 
         input.attr({ type: "checkbox" });
-        //input.attr(data.checked)
+        input.attr({ id: data.id });
+        input.addClass("check");
+        if (data.checked) {
+          input.attr({ checked: data.checked });
+        }
         label.append(input);
         label.append(span);
 
@@ -103,7 +113,7 @@ $(document).ready(function() {
 
   // handleFormSubmit is called whenever we submit a new example
   // Save the new example to the db and refresh the list
-  var handleFormSubmit = function(event) {
+  var handleFormSubmit = function (event) {
     event.preventDefault();
 
     var ingredient = {
@@ -116,7 +126,7 @@ $(document).ready(function() {
       return;
     }
 
-    API.saveIngredient(ingredient).then(function(result) {
+    API.saveIngredient(ingredient).then(function (result) {
       console.log(result);
       refreshIngredients(result);
     });
@@ -127,33 +137,47 @@ $(document).ready(function() {
 
   // handleDeleteBtnClick is called when an example's delete button is clicked
   // Remove the example from the db and refresh the list
-  var handleDeleteBtnClick = function() {
+  var handleDeleteBtnClick = function () {
     var idToDelete = $(this)
       .parent()
       .attr("data-id");
 
-    API.deleteExample(idToDelete).then(function() {
+    API.deleteExample(idToDelete).then(function () {
       refreshIngredients();
     });
   };
 
-  var removeIngredient = function() {
-
-
+  var removeIngredient = function () {
     $.ajax({
       method: "DELETE",
       url: "/api/ingredient/" + this.id
-    }).then(function(ingredients) {
+    }).then(function (ingredients) {
       refreshIngredients(ingredients);
+    });
+  };
+
+  var findRecipes = function (event) {
+    event.preventDefault();
+    API.getRecipes();
+
+  };
+  var addIngredienttoRecipe = function (event) {
+    var data = {
+      id: this.id,
+      checked: event.target.value
+    };
+    console.log(event)
+    $.ajax({
+      method: "PUT",
+      url: "/api/ingredientToRecipe",
+      data: data
     });
   };
 
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
   $ingredientList.on("click", ".delete", handleDeleteBtnClick);
-
-  //  $ingredientRemove.on("click", removeIngredient);
-
   $(document).on("click", ".remove-ingredient", removeIngredient);
-
+  $(document).on("click", "#find-recipes", findRecipes);
+  $(document).on("click", ".check", addIngredienttoRecipe);
 });

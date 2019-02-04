@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   let Ingredients = sequelize.define("Ingredients", {
     name: {
       type: DataTypes.STRING,
@@ -25,10 +25,14 @@ module.exports = function(sequelize, DataTypes) {
     carbs: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    checked: {
+      type: DataTypes.STRING,
+      defaultValue: ""
     }
   });
 
-  Ingredients.associate = function(models) {
+  Ingredients.associate = function (models) {
     // an ingredient belongs to a measurement if applicable, otherwise quantity = # of that ingredient
     Ingredients.belongsTo(models.Measurements, {
       foreignKey: {

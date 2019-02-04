@@ -7,15 +7,15 @@ var db = require("../models");
 const bcrypt = require("bcryptjs");
 const passport = require("../config/passport");
 
-module.exports = function(app) {
+module.exports = function (app) {
   // GET ALL INGREDIENTS SAVED TO THE 'INGREDIENTS' TABLE
   // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below.
 
-  app.get("/api/ingredients/", function(req, res) {
+  app.get("/api/ingredients/", function (req, res) {
     db.Ingredients.findAll({
       //1. Go to the models folder, use the Ingredients table and find all data
       include: [db.Measurements] //2. Join the Measurements table to the Ingredients table
-    }).then(function(dbIngredient) {
+    }).then(function (dbIngredient) {
       res.json(dbIngredient); //3. Send all info from 1 & 3 in a json response
     });
   });
@@ -23,14 +23,14 @@ module.exports = function(app) {
   // GET A SINGLE INGREDIENT SAVED TO THE 'INGREDIENTS' TABLE
   // See a single ingredient in json format vai the browser by using the site url + the route specified in the GET request below.
 
-  app.get("/api/ingredients/:id", function(req, res) {
+  app.get("/api/ingredients/:id", function (req, res) {
     db.Ingredients.findOne({
       //1. Go to the models folder, use the Ingredients table and find one record
       where: {
         id: req.params.id //2. Record must match the id specified by the user in the url of the GET request
       },
       include: [db.Measurements]
-    }).then(function(dbIngredient) {
+    }).then(function (dbIngredient) {
       //3. Join the Measurements table to the Ingredients table
       res.json(dbIngredient); //4. Send all info from 1 & 3 in a json response
     });
@@ -40,7 +40,7 @@ module.exports = function(app) {
   // You do not render data in a browser using a POST request, this route is only being used to send info to the db.
   // To view the data in the db, use the GET request for ingredients above.
 
-  app.post("/api/ingredientsAPI", function(req, res) {
+  app.post("/api/ingredientsAPI", function (req, res) {
     var food = req.body.ingredient; //1. Save ingredient entered by user into the 'food' variable
     var queryID = "80dab669"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
     var queryKey = "bf81be851f5f242c3a6279af40337e79"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
@@ -57,7 +57,7 @@ module.exports = function(app) {
 
     axios
       .get(queryUrl)
-      .then(function(response) {
+      .then(function (response) {
         var foodLabel = response.data.parsed[0].food.label;
         var foodLabelName = foodLabel.split(",");
         var foodCalories = response.data.parsed[0].food.nutrients.ENERC_KCAL;
@@ -76,17 +76,17 @@ module.exports = function(app) {
 
         //Use the models (located in the models folder) to create a model for ingredients
         db.Ingredients.create(ingredient)
-          .then(function(newIngredient) {
+          .then(function (newIngredient) {
             res.status(200).send("OK");
           })
-          .catch(function(error) {
+          .catch(function (error) {
             if (error) {
               res.status(500).send("Internal Server Error");
               console.log("Ingredient Could not be inserted into DB");
             }
           });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         if (error) {
           res.status(500).send("Internal Server Error");
           console.log("NO RESULTS FOUND");
@@ -95,43 +95,55 @@ module.exports = function(app) {
   });
 
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
-  app.post("/recipesAPI", function(req, res) {
-    var food = "chicken"; //1. Save ingredients required for receipe search
-    var queryID = "fcb72d93"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
-    var queryKey = "f10388ab91215f04c2c1a28330336b8d"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
+  app.get("/api/recipesAPI", function (req, res) {
+    db.Ingredients.findAll({
+      where: { checked: "checked" }
+    }).then(function (ing) {
+      var food = []
+      for (var i = 0; i < ing.length; i++) {
+        food.push(ing[i].dataValues.name)
+      }
+      var queryID = "fcb72d93";
+      var queryKey = "f10388ab91215f04c2c1a28330336b8d";
+      var queryUrl =
+        "https://api.edamam.com/search?q=" +
+        food +
+        "&app_id=" +
+        queryID +
+        "&app_key=" +
+        queryKey;
 
-    // Then run a request with axios to the Edamam API with the movie specified
-    //NOTE: You can add additional parameters to this request, see documentation
-    var queryUrl =
-      "https://api.edamam.com/search?q=" +
-      food +
-      "&app_id=" +
-      queryID +
-      "&app_key=" +
-      queryKey;
+      axios
+        .get(queryUrl)
+        .then(function (response) {
+          var hits = response.data.hits;
+          var recipesArray = [];
+          for (let index = 0; index < hits.length; index++) {
+            var recipes = [];
+            recipes.push(hits[index].recipe.label);
+            recipes.push(hits[index].recipe.calories);
+            recipes.push(hits[index].recipe.dietLabels);
+            recipes.push(hits[index].recipe.ingredientLines);
+            recipesArray.push(recipes);
+          }
+          console.log(recipesArray)
+          res.json(recipesArray);
+        })
+        .catch(function (error) {
+          if (error) {
+            console.log(error);
+            res.status(500).send("Recipes Internal Server Error");
+            console.log("Recipes - NO RESULTS FOUND");
+          }
+        });
+    });
 
-    axios
-      .get(queryUrl)
-      .then(function(response) {
-        for (let index = 0; index < response.data.hits.length; index++) {
-          recipe = {
-            name: response.data.hits[index].recipe.label,
-            ingredients: response.data.hits[index].recipe.ingredientLines,
-            nutrition: response.data.hits[index].recipe.totalNutrients
-          };
-        }
-      })
-      .catch(function(error) {
-        if (error) {
-          console.log("NO RESULTS FOUND");
-        }
-      });
   });
-  app.get("/users/register", function(req, res) {
+  app.get("/users/register", function (req, res) {
     res.render("register");
   });
 
-  app.get("/users/login", function(req, res) {
+  app.get("/users/login", function (req, res) {
     res.render("login");
   });
   //login user route
@@ -233,11 +245,42 @@ module.exports = function(app) {
   //COMMENTING THIS OUT FOR NOW_________________________________________________________
   // Will add back to the file once the first get request works
   // Delete an example by id
-  app.delete("/api/ingredient/:id", function(req, res) {
-    db.Ingredients.destroy({ where: { id: req.params.id } }).then(function(
+  app.delete("/api/ingredient/:id", function (req, res) {
+    db.Ingredients.destroy({ where: { id: req.params.id } }).then(function (
       dbIngredient
     ) {
       res.json(dbIngredient);
     });
+  });
+  app.put("/api/ingredientToRecipe", function (req, res) {
+    console.log(req.body);
+    if (req.body.checked == 'on') {
+      db.Ingredients.update(
+        {
+          checked: ""
+        },
+        {
+          where: {
+            id: req.body.id
+          }
+        }
+      ).then(function () {
+        res.status(200).send("OK");
+      })
+    }
+    else {
+      db.Ingredients.update(
+        {
+          checked: "checked"
+        },
+        {
+          where: {
+            id: req.body.id
+          }
+        }
+      ).then(function () {
+        res.status(200).send("OK");
+      })
+    }
   });
 };

@@ -137,7 +137,6 @@ module.exports = function (app) {
           }
         });
     });
-
   });
   app.get("/users/register", function (req, res) {
     res.render("register");
@@ -254,7 +253,7 @@ module.exports = function (app) {
   });
   app.put("/api/ingredientToRecipe", function (req, res) {
     console.log(req.body);
-    if (req.body.checked == 'on') {
+    if (req.body.checked == "on") {
       db.Ingredients.update(
         {
           checked: ""
@@ -266,9 +265,8 @@ module.exports = function (app) {
         }
       ).then(function () {
         res.status(200).send("OK");
-      })
-    }
-    else {
+      });
+    } else {
       db.Ingredients.update(
         {
           checked: "checked"
@@ -280,7 +278,7 @@ module.exports = function (app) {
         }
       ).then(function () {
         res.status(200).send("OK");
-      })
+      });
     }
   });
 };

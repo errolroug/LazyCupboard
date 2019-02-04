@@ -159,7 +159,6 @@ $(document).ready(function () {
   var findRecipes = function (event) {
     event.preventDefault();
     API.getRecipes();
-
   };
   var addIngredienttoRecipe = function (event) {
     var data = {

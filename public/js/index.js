@@ -79,9 +79,31 @@ $(document).ready(function() {
       return;
     }
 
-    API.saveIngredient(ingredient).then(function(result) {
-      console.log(result);
-      refreshIngredients(result);
+    API.getIngredients().then(function(result) {
+      var tableIngredients = [];
+      var matchCount = 0;
+      var existingIngredient = false;
+      for (let index = 0; index < result.length; index++) {
+        tableIngredients.push(result[index].name);
+      }
+      API.saveIngredient(ingredient).then(function(result) {
+        var apiIngredientName = result.name;
+        for (let index = 0; index < tableIngredients.length; index++) {
+          // console.log(tableIngredients[index]);
+          // console.log(apiIngredientName);
+          if (apiIngredientName === tableIngredients[index]) {
+            // existingIngredient = true;
+            // console.log("MATCH FOUND: " + existingIngredient);
+            matchCount++;
+          }
+        }
+        refreshIngredients(result);
+        console.log(matchCount);
+        if (matchCount > 0) {
+          alert("You've already added " + apiIngredientName);
+          return;
+        }
+      });
     });
 
     $ingredientAdded.val("");

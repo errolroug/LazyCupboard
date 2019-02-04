@@ -41,7 +41,7 @@ module.exports = function getIngredientInfo(req, res) {
       //Use the models (located in the models folder) to create a model for ingredients
       db.Ingredients.create(ingredient)
         .then(function(newIngredient) {
-          res.status(200).send("OK");
+          res.json(newIngredient);
         })
         .catch(function(error) {
           if (error) {

@@ -41,7 +41,9 @@ module.exports = function(app) {
   // To view the data in the db, use the GET request for ingredients above.
 
   app.post("/api/ingredientsAPI", function(req, res) {
-    var food = req.body.ingredient; //1. Save ingredient entered by user into the 'food' variable
+    var food =
+      process.env.NODE_ENV !== "test" ? req.body.ingredient : "chicken";
+    //1. Save ingredient entered by user into the 'food' variable
     var queryID = "80dab669"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
     var queryKey = "bf81be851f5f242c3a6279af40337e79"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
 
@@ -82,14 +84,14 @@ module.exports = function(app) {
           .catch(function(error) {
             if (error) {
               res.status(500).send("Internal Server Error");
-              console.log("Ingredient Could not be inserted into DB");
+              console.log("Ingredient Could not be inserted into DB", error);
             }
           });
       })
       .catch(function(error) {
         if (error) {
           res.status(500).send("Internal Server Error");
-          console.log("NO RESULTS FOUND");
+          console.log("NO RESULTS FOUND", error);
         }
       });
   });

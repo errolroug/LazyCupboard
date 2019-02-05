@@ -97,37 +97,50 @@ module.exports = function(app) {
   });
 
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
-  app.post("/recipesAPI", function(req, res) {
-    var food = "chicken"; //1. Save ingredients required for receipe search
-    var queryID = "fcb72d93"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
-    var queryKey = "f10388ab91215f04c2c1a28330336b8d"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
+  app.post("/api/recipesAPI", function(req, res) {
+    db.Ingredients.findAll({
+      where: { checked: "checked" }
+    }).then(function(ing) {
+      var food = [];
+      for (var i = 0; i < ing.length; i++) {
+        food.push(ing[i].dataValues.name);
+      }
+      console.log(food);
+      var queryID = "fcb72d93";
+      var queryKey = "f10388ab91215f04c2c1a28330336b8d";
+      var queryUrl =
+        "https://api.edamam.com/search?q=" +
+        food +
+        "&app_id=" +
+        queryID +
+        "&app_key=" +
+        queryKey;
 
-    // Then run a request with axios to the Edamam API with the movie specified
-    //NOTE: You can add additional parameters to this request, see documentation
-    var queryUrl =
-      "https://api.edamam.com/search?q=" +
-      food +
-      "&app_id=" +
-      queryID +
-      "&app_key=" +
-      queryKey;
+      axios
+        .get(queryUrl)
+        .then(function(response) {
+          var hits = response.data.hits;
+          // var recipesArray = [];
+          // for (let index = 0; index < hits.length; index++) {
+          //   var recipes = [];
+          //   recipes.push(hits[index].recipe.label);
+          //   recipes.push(hits[index].recipe.calories);
+          //   recipes.push(hits[index].recipe.dietLabels);
+          //   recipes.push(hits[index].recipe.ingredientLines);
+          //   recipesArray.push(recipes);
+          // }
+          res.send(hits);
+        })
+        .catch(function(error) {
+          if (error) {
+            console.log(error);
+            res.status(500).send("Recipes Internal Server Error");
+            console.log("Recipes - NO RESULTS FOUND");
+          }
+        });
+    });
 
-    axios
-      .get(queryUrl)
-      .then(function(response) {
-        for (let index = 0; index < response.data.hits.length; index++) {
-          recipe = {
-            name: response.data.hits[index].recipe.label,
-            ingredients: response.data.hits[index].recipe.ingredientLines,
-            nutrition: response.data.hits[index].recipe.totalNutrients
-          };
-        }
-      })
-      .catch(function(error) {
-        if (error) {
-          console.log("NO RESULTS FOUND");
-        }
-      });
+    // res.setHeader("Content-Type", "text/html")
   });
   app.get("/users/register", function(req, res) {
     res.render("register");
@@ -241,5 +254,35 @@ module.exports = function(app) {
     ) {
       res.json(dbIngredient);
     });
+  });
+  app.put("/api/ingredientToRecipe", function(req, res) {
+    console.log(req.body.checked);
+    if (req.body.checked === "true") {
+      db.Ingredients.update(
+        {
+          checked: "checked"
+        },
+        {
+          where: {
+            id: req.body.id
+          }
+        }
+      ).then(function() {
+        res.status(200).send("OK");
+      });
+    } else {
+      db.Ingredients.update(
+        {
+          checked: ""
+        },
+        {
+          where: {
+            id: req.body.id
+          }
+        }
+      ).then(function() {
+        res.status(200).send("OK");
+      });
+    }
   });
 };

@@ -1,5 +1,5 @@
-{{#if meals}}
-<table class="highlight responsive-table" id="meal-list">
+{{#if recipes}}
+<table class="highlight responsive-table" class="recipes-list">
 
     <thead>
         <tr>
@@ -11,7 +11,7 @@
     </thead>
 
     <tbody>
-        {{#each dbMeals}}
+        {{#each recipes}}
         <tr data-id="{{this.dataValues.id}}">
             <td><a href="meals/{{this.dataValues.id}}">{{this.name}}</a></td>
             <td><button id={{id}} class="btn-floating btn-small scale-transition">
@@ -23,7 +23,7 @@
     </tbody>
 </table>
 {{else}}
-<button class="btn waves-effect waves-light" id="find-recipes" type="submit" name="action">Find Recipes
+<button class="btn waves-effect waves-light recipe-list" id="find-recipes" type="submit" name="action">Find Recipes
     <i class="material-icons right">send</i>
 </button>
 {{/if}}

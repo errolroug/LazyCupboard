@@ -119,7 +119,8 @@ module.exports = function(app) {
       axios
         .get(queryUrl)
         .then(function(response) {
-          var hits = response.data.hits;
+          var recipes = response.data.hits;
+
           // var recipesArray = [];
           // for (let index = 0; index < hits.length; index++) {
           //   var recipes = [];
@@ -129,7 +130,7 @@ module.exports = function(app) {
           //   recipes.push(hits[index].recipe.ingredientLines);
           //   recipesArray.push(recipes);
           // }
-          res.send(hits);
+          res.send(recipes);
         })
         .catch(function(error) {
           if (error) {

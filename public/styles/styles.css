@@ -30,23 +30,24 @@
   margin: auto;
 }
 .container-ingredient-list{
-	width: 35%;
+	width: 100%;
 	padding: 10px;
+	margin: auto;
 	float: left;
 }
 
 .container-meal-list{
-	width: 60%;
-	margin-left: 5%;
+	width: 100%;
+	margin: auto;
 	padding: 10px;
 	float: left;
 }
 .card-css{
-	max-width: 650px;
+	height: 400px;
 }
 .div-image-size{
-	max-height: 400px;
-	max-width: 650px;
+	max-height: auto;
+	max-width: 45%;
 }
 .image-size{
   display: block;

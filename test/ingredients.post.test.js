@@ -30,20 +30,21 @@ describe("POST /api/ingredientsAPI", function() {
     // POST the request body to the server
     request
       .post("/api/ingredientsAPI")
-      .send("Chicken")
+      // .send("Chicken")
+      .send(reqBody)
       .end(function(err, res) {
         var responseStatus = res.status;
         var responseBody = res.body;
-        console.log(
-          "---------------------------- test ------------------------------ "
-        );
-        console.log(reqBody);
+        // console.log(
+        //   "---------------------------- test ------------------------------ "
+        // );
+        // console.log(reqBody);
 
         // Run assertions on the response
 
         expect(err).to.be.null;
 
-        // expect(responseStatus).to.equal(200);
+        expect(responseStatus).to.equal(200);
 
         expect(responseBody)
           .to.be.an("object")

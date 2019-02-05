@@ -25,6 +25,10 @@ module.exports = function(sequelize, DataTypes) {
     carbs: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    checked: {
+      type: DataTypes.STRING,
+      defaultValue: ""
     }
   });
 

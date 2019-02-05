@@ -41,3 +41,16 @@
 	padding: 10px;
 	float: left;
 }
+.card-css{
+	max-width: 650px;
+}
+.div-image-size{
+	max-height: 400px;
+	max-width: 650px;
+}
+.image-size{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+

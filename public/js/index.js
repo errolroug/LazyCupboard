@@ -156,7 +156,9 @@ $(document).ready(function () {
       var cardTitleReveal = $("<span>").addClass(
         "card-title grey-text text-darken-4"
       );
-      cardTitleReveal.text("Ingredients");
+      cardTitleReveal.text(
+        "Ingredients (" + data.recipe.calories.toFixed(0) + " Total Calories)"
+      );
       var cardTitleiRevealClass = $("<i>").addClass("material-icons right");
       cardTitleiRevealClass.text("close");
       cardTitleReveal.append(cardTitleiRevealClass);
@@ -183,7 +185,7 @@ $(document).ready(function () {
       var cardAction = $("<div>").addClass("card-action");
       var addButton = $("<button>").addClass("btn waves-effect waves-light");
       addButton.attr({ type: "submit", name: "action" });
-      addButton.text("Add Recipe")
+      addButton.text("Add Recipe (" + data.recipe.calories.toFixed(0) + " Cal)");
 
       var iclassbtn = $("<i>").addClass("material-icons right");
       iclassbtn.text("send");

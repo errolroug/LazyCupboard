@@ -27,32 +27,31 @@
   width: 150px;
   margin: auto;
 }
-.container-ingredient-list{
-	width: 100%;
-	padding: 10px;
-	margin: auto;
-	float: left;
+.container-ingredient-list {
+  width: 100%;
+  padding: 10px;
+  margin: auto;
+  float: left;
 }
 
-.container-meal-list{
-	width: 100%;
-	margin: auto;
-	padding: 10px;
-	float: left;
-
+.container-meal-list {
+  width: 100%;
+  margin: auto;
+  padding: 10px;
+  float: left;
+}
 .hidden {
   margin: inherit;
 }
-.card-css{
-	height: 400px;
+.card-css {
+  height: 400px;
 }
-.div-image-size{
-	max-height: auto;
-	max-width: 45%;
+.div-image-size {
+  max-height: auto;
+  max-width: 45%;
 }
-.image-size{
+.image-size {
   display: block;
   width: 100%;
   height: auto;
 }
-

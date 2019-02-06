@@ -1,5 +1,7 @@
 $(document).ready(function () {
   $("select").formSelect();
+  $('.collapsible').collapsible();
+
   // $('.collapsible').collapsible();
 
   // Get references to page elements
@@ -113,7 +115,8 @@ $(document).ready(function () {
     });
   };
   var displayRecipes = function (data) {
-
+    var tableIng = $("#tbody-ingredientList").addClass("hide");
+    console.log(tableIng)
     var $recipes = data.map(function (data) {
       // var row = $("<div>").addClass("row");
 
@@ -263,6 +266,14 @@ $(document).ready(function () {
       data: data
     });
   };
+  var ingredientListhideshow = function (event) {
+    if ($("#tbody-ingredientList").attr("class") === "hide") {
+      $("#tbody-ingredientList").removeClass("hide")
+    }
+    else {
+      $("#tbody-ingredientList").addClass("hide")
+    }
+  }
 
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
@@ -270,5 +281,7 @@ $(document).ready(function () {
   $(document).on("click", ".remove-ingredient", removeIngredient);
   $(document).on("click", "#find-recipes", findRecipes);
   $(document).on("click", ".check", addIngredienttoRecipe);
+  $(document).on("click", ".collapse-table", ingredientListhideshow);
+
   // $(document).on("ready", ".collapsible", $('.collapsible').collapsible());
 });

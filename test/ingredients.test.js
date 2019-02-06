@@ -20,22 +20,37 @@ describe("GET /api/ingredients", function() {
   it("should find all ingredients", function(done) {
     // Add some examples to the db to test with
 
+    db.User.bulkCreate([
+      {
+        firstName: "Joe",
+        lastName: "Smith",
+        email: "test@test.com",
+        role: "QA",
+        password:
+          "$2a$10$8prPhAzPKIm2FzPBlFC2ROkFnJGRZnQGGWbi2a6yMIbjKNmKDfaHi",
+        createdAt: "2019-01-30 19:46:18",
+        updatedAt: "2019-01-30 19:46:18"
+      }
+    ]);
+
     db.Ingredients.bulkCreate([
       {
         name: "Chicken",
-        quantity: 2,
+        protein: 2,
         // MeasurementID: null,
         calories: 215,
         fat: 15,
+        UserId: 1,
         createdAt: "2019-01-30 19:46:18",
         updatedAt: "2019-01-30 19:46:18"
       },
       {
         name: "Rice",
-        quantity: 1,
+        protein: 1,
         // MeasurementID: 1,
         calories: 20,
         fat: 7,
+        UserId: 1,
         createdAt: "2019-01-30 19:46:18",
         updatedAt: "2019-01-30 19:46:18"
       }
@@ -57,11 +72,11 @@ describe("GET /api/ingredients", function() {
 
         expect(responseBody[0])
           .to.be.an("object")
-          .that.includes({ name: "Chicken", quantity: 2 });
+          .that.includes({ name: "Chicken", fat: 15 });
 
         expect(responseBody[1])
           .to.be.an("object")
-          .that.includes({ name: "Rice", quantity: 1 });
+          .that.includes({ name: "Rice", fat: 7 });
 
         // The `done` function is used to end any asynchronous tests
         done();

@@ -7,13 +7,18 @@ module.exports = function(sequelize, DataTypes) {
         len: [1, 140]
       }
     },
-    quantity: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      defaultValue: 1,
-      validate: { min: 0 }
-    },
+    // quantity: {
+    //   type: DataTypes.FLOAT,
+    //   allowNull: false,
+    //   defaultValue: 1,
+    //   validate: { min: 0 }
+    // },
     calories: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    protein: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
@@ -33,10 +38,10 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   Ingredients.associate = function(models) {
-    // an ingredient belongs to a measurement if applicable, otherwise quantity = # of that ingredient
-    Ingredients.belongsTo(models.Measurements, {
+    // an ingredient belongs to a user
+    Ingredients.belongsTo(models.User, {
       foreignKey: {
-        allowNull: true
+        allowNull: false
       }
     });
   };

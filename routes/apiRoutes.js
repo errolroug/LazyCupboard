@@ -12,9 +12,11 @@ module.exports = function(app) {
   // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below.
 
   app.get("/api/ingredients/", function(req, res) {
+    //TODO : Move below findAll to a function "displayIngredients"
+    let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1; // staging data for tests if no user logged in
     db.Ingredients.findAll({
-      //1. Go to the models folder, use the Ingredients table and find all data
-      include: [db.Measurements] //2. Join the Measurements table to the Ingredients table
+      //1. Go to the models folder, use the Ingredients table and find all data for current user
+      where: { UserId: userID }
     }).then(function(dbIngredient) {
       res.json(dbIngredient); //3. Send all info from 1 & 3 in a json response
     });
@@ -73,7 +75,8 @@ module.exports = function(app) {
           calories: foodCalories,
           protein: foodProtein,
           fat: foodFat,
-          carbs: foodCarbs
+          carbs: foodCarbs,
+          UserId: req.user.id
         };
 
         //Use the models (located in the models folder) to create a model for ingredients
@@ -85,6 +88,7 @@ module.exports = function(app) {
             if (error) {
               res.status(500).send("Internal Server Error");
               console.log("Ingredient Could not be inserted into DB", error);
+              console.log(ingredient);
             }
           });
       })

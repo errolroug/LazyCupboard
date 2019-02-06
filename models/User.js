@@ -38,11 +38,18 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+
+  User.associate = function(models) {
+    //associating Measurements with Ingredients
+    User.hasMany(models.Ingredients, {});
+  };
+
   User.prototype.getPassword = function() {
     return this.password;
   };
   User.prototype.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
   };
+
   return User;
 };

@@ -1,5 +1,8 @@
 $(document).ready(function () {
   $("select").formSelect();
+  $('.collapsible').collapsible();
+
+  // $('.collapsible').collapsible();
 
   // Get references to page elements
   var $ingredientAdded = $("#ingredient");
@@ -8,7 +11,7 @@ $(document).ready(function () {
   var $ingredientList = $("#ingredient-list");
   var $ingredientRemove = $(".remove-ingredient");
   var $tbodyIngredientList = $("#tbody-ingredientList");
-  var $recipesList = $(".recipe-list")
+  var $recipesList = $(".recipe-list");
 
   // The API object contains methods for each kind of request we'll make
   var API = {
@@ -112,47 +115,82 @@ $(document).ready(function () {
     });
   };
   var displayRecipes = function (data) {
+    var tableIng = $("#tbody-ingredientList").addClass("hide");
+    console.log(tableIng)
     var $recipes = data.map(function (data) {
-      var maindiv = $("<div>")
-      maindiv.addClass("row")
+      // var row = $("<div>").addClass("row");
 
-      var colDiv = $("<div>");
-      colDiv.addClass("col s12 m12")
+      var col = $("<div>").addClass("col s12 m6 l4");
+      var card = $("<div>").addClass("card card-css center-align hoverable");
+      var cardImg = $("<div>").addClass(
+        "card-image waves-effect waves-block waves-light div-image-size"
+      );
+      var rcpImg = $("<img>").attr({ src: data.recipe.image });
+      rcpImg.addClass("activator image-size");
+      cardImg.append(rcpImg);
 
-      var cardDiv = $("<div>").addClass("card blue-grey darken-1");
+      card.append(cardImg);
 
-      var cardContent = $("<div>").addClass("card-content black-text");
+      var cardContent = $("<div>").addClass("card-content"); // collapsible-body");
 
-      var span = $("<span>").addClass("card-title");
-      span.text(data.recipe.label);
+      var cardTitle = $("<span>").addClass(
+        "card-title activator grey-text text-darken-4"
+      );
+      cardTitle.text(data.recipe.label);
+      var cardTitleiClass = $("<i>").addClass("material-icons right");
+      cardTitleiClass.text("more_vert");
+      cardTitle.append(cardTitleiClass);
 
-      var ul = $("<ul>").addClass("collection")
+      var ptitlle = $("<p>");
+      var atitle = $("<a>").attr({ href: "#" });
+      ptitlle.append(atitle);
+
+      cardContent.append(cardTitle);
+      cardContent.append(ptitlle);
+
+      card.append(cardContent);
+
+      var cardReveal = $("<div>").addClass("card-reveal");
+
+      var cardTitleReveal = $("<span>").addClass(
+        "card-title grey-text text-darken-4"
+      );
+      cardTitleReveal.text(
+        "Ingredients (" + data.recipe.calories.toFixed(0) + " Total Calories)"
+      );
+      var cardTitleiRevealClass = $("<i>").addClass("material-icons right");
+      cardTitleiRevealClass.text("close");
+      cardTitleReveal.append(cardTitleiRevealClass);
+
+      cardReveal.append(cardTitleReveal);
+
+      var ul = $("<ul>").addClass("collection");
       for (var i = 0; i < data.recipe.ingredients.length; i++) {
-        var li = $("<li>").addClass("collection-item");
+        var li = $("<li>").addClass(
+          "collection-item #eceff1 blue-grey lighten-5"
+        );
         li.text(data.recipe.ingredients[i].text);
         ul.append(li);
       }
+      cardReveal.append(ul);
+
+      card.append(cardReveal);
+      // card.append(cardContent);
+      col.append(card);
+      // row.append(col);
 
       var cardAction = $("<div>").addClass("card-action");
-
       var addButton = $("<button>").addClass("btn waves-effect waves-light");
       addButton.attr({ type: "submit", name: "action" });
-      addButton.text("Add Recipe");
+      addButton.text("Prepare (" + data.recipe.calories.toFixed(0) + " Cal)");
 
       var iclassbtn = $("<i>").addClass("material-icons right");
       iclassbtn.text("send");
-
       addButton.append(iclassbtn);
       cardAction.append(addButton);
 
-      ul.append(li);
-      span.append(ul);
-      cardContent.append(span);
-      cardDiv.append(cardContent);
-      cardDiv.append(cardAction);
-      maindiv.append(cardDiv);
-
-      return maindiv
+      card.append(cardAction);
+      return col;
     });
     // var $tbody = $("<tbody>").attr({ id: "tbody-ingredientList" });
     // $tbody.append($ingredients)
@@ -212,7 +250,7 @@ $(document).ready(function () {
     event.preventDefault();
     API.getRecipes().then(function (response) {
       console.log(response);
-      displayRecipes(response)
+      displayRecipes(response);
     });
   };
   var addIngredienttoRecipe = function (event) {
@@ -228,6 +266,14 @@ $(document).ready(function () {
       data: data
     });
   };
+  var ingredientListhideshow = function (event) {
+    if ($("#tbody-ingredientList").attr("class") === "hide") {
+      $("#tbody-ingredientList").removeClass("hide")
+    }
+    else {
+      $("#tbody-ingredientList").addClass("hide")
+    }
+  }
 
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
@@ -235,4 +281,7 @@ $(document).ready(function () {
   $(document).on("click", ".remove-ingredient", removeIngredient);
   $(document).on("click", "#find-recipes", findRecipes);
   $(document).on("click", ".check", addIngredienttoRecipe);
+  $(document).on("click", ".collapse-table", ingredientListhideshow);
+
+  // $(document).on("ready", ".collapsible", $('.collapsible').collapsible());
 });

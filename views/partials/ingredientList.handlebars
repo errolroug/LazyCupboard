@@ -1,37 +1,39 @@
-<table class="highlight responsive-table" id="ingredient-list">
+<div class="row">
+    <table class="highlight responsive-table" id="ingredient-list">
 
-    <thead>
-        <tr>
-            <th></th>
-            <th>Ingredient</th>
-            <th>Calories</th>
-            <th>Protein</th>
-            <th>Fat</th>
-            <th>Carbs</th>
-            <th>Remove</th>
-        </tr>
-    </thead>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Ingredient</th>
+                <th>Calories</th>
+                <th>Protein</th>
+                <th>Fat</th>
+                <th>Carbs</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
 
-    <tbody id="tbody-ingredientList">
-        {{#each dbIngredient}}
-        <tr dataID="{{this.dataValues.id}}">
-            <td>
-                <label>
-                    <input type="checkbox" class="check" id={{this.dataValues.id}} {{checked}} />
-                    <span></span>
-                </label>
-            </td>
-            <td><a href="ingredient/{{this.dataValues.id}}">{{this.name}}</a></td>
-            <td>{{this.calories}}</td>
-            <td>{{this.protein}}</td>
-            <td>{{this.fat}}</td>
-            <td>{{this.carbs}}</td>
-            <td><button id={{id}} class="btn-floating btn-small scale-transition remove-ingredient">
-                    <i class="material-icons">remove</i>
-                </button>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
+        <tbody id="tbody-ingredientList">
+            {{#each dbIngredient}}
+            <tr dataID="{{this.dataValues.id}}">
+                <td>
+                    <label>
+                        <input type="checkbox" class="check" id={{this.dataValues.id}} {{checked}} />
+                        <span></span>
+                    </label>
+                </td>
+                <td><a href="ingredient/{{this.dataValues.id}}">{{this.name}}</a></td>
+                <td>{{this.calories}}</td>
+                <td>{{this.protein}}</td>
+                <td>{{this.fat}}</td>
+                <td>{{this.carbs}}</td>
+                <td><button id={{id}} class="btn-floating btn-small scale-transition remove-ingredient">
+                        <i class="material-icons">remove</i>
+                    </button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
 
-</table>
+    </table>
+</div>

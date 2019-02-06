@@ -23,9 +23,15 @@
     </tbody>
 </table>
 {{else}}
+<div class="row">
+    <div class="col s12 m6 recipe-button">
+        <a class="waves-effect waves-light btn-large center-align" id="find-recipes"><i class="material-icons left">search</i>Find
+            Recipes</a>
+    </div>
+</div>
 <div class="recipe-list">
-    <button class="btn waves-effect waves-light" id="find-recipes" type="submit" name="action">Find Recipes
+    {{!-- <button class="btn waves-effect waves-light" id="find-recipes" type="submit" name="action">Find Recipes
         <i class="material-icons right">send</i>
-    </button>
+    </button> --}}
 </div>
 {{/if}}

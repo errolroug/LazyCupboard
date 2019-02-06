@@ -1,31 +1,29 @@
 .list-group-item {
   line-height: 2.5;
 }
-.content-container{
-	width: 95%;
-	margin: auto;
+.content-container {
+  width: 95%;
+  margin: auto;
 }
-.some-left-margin{
-	margin-left: 10px;
-
+.some-left-margin {
+  margin-left: 10px;
 }
-.margin-padding{
+.margin-padding {
   padding: 5px;
   margin-top: 10px;
 }
-.login-container{
-	width: 40%;
-	margin: auto;
+.login-container {
+  width: 40%;
+  margin: auto;
 }
-.register-container{
-	width: 50%;
-	margin: auto;
-
+.register-container {
+  width: 50%;
+  margin: auto;
 }
-.padding-10{
+.padding-10 {
   padding: 10px;
 }
-.centralized{
+.centralized {
   width: 150px;
   margin: auto;
 }
@@ -41,6 +39,9 @@
 	margin: auto;
 	padding: 10px;
 	float: left;
+
+.hidden {
+  margin: inherit;
 }
 .card-css{
 	height: 400px;

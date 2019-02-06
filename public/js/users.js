@@ -31,7 +31,7 @@ $("#register-user").on("submit", function(event) {
 
   // Do some validation to make sure the password lenght is at least 4 characters:
 
-  if (newUser.password === newUser.password2 && newUser.password.length > 4) {
+  if (newUser.password === newUser.password2 && newUser.password.length > 6) {
     console.log("success");
 
     // Send the POST request to register the new user:
@@ -45,7 +45,17 @@ $("#register-user").on("submit", function(event) {
         $("body").replaceWith(data);
       })
       .fail(err => console.log(err));
-  } else {
-    console.log("error");
+  } else if (
+    newUser.password !== newUser.password2 &&
+    newUser.password.length > 4
+  ) {
+    $(".hidden").empty();
+    $(".hidden").append("Passwords do not match");
+  } else if (
+    newUser.password === newUser.password2 &&
+    newUser.password.length < 4
+  ) {
+    $(".hidden").empty();
+    $(".hidden").append("Password must be longer than 6 characters");
   }
 });

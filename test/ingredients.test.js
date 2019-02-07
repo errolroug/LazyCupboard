@@ -24,6 +24,7 @@ describe("GET /api/ingredients", function() {
       {
         firstName: "Joe",
         lastName: "Smith",
+        username: "jsmith123",
         email: "test@test.com",
         role: "QA",
         password:

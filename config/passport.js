@@ -11,7 +11,7 @@ passport.use(
     },
     (req, username, password, done) => {
 
-      var criteria = (username.indexOf('@') === -1) ? { username: username } : { email: username };
+      var criteria = (username.indexOf("@") === -1) ? { username: username } : { email: username };
       //check if user is in db
       db.User.findOne({ where: criteria }).then(user => {
 

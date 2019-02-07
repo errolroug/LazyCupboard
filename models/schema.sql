@@ -1,5 +1,6 @@
-DROP DATABASE IF EXISTS lazyCupboard_db;
+DROP DATABASE IF EXISTS lazycupboard_db;
 
 -- Create the database lazyCupboard_db and specify it for use.
-CREATE DATABASE lazyCupboard_db;
-USE lazyCupboard_db;
+CREATE DATABASE lazycupboard_db;
+USE lazycupboard_db;
+

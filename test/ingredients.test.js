@@ -31,55 +31,55 @@ describe("GET /api/ingredients", function() {
         createdAt: "2019-01-30 19:46:18",
         updatedAt: "2019-01-30 19:46:18"
       }
-    ]);
+    ]).then(() => {
+      db.Ingredients.bulkCreate([
+        {
+          name: "Chicken",
+          protein: 2,
+          // MeasurementID: null,
+          calories: 215,
+          fat: 15,
+          UserId: 1,
+          createdAt: "2019-01-30 19:46:18",
+          updatedAt: "2019-01-30 19:46:18"
+        },
+        {
+          name: "Rice",
+          protein: 1,
+          // MeasurementID: 1,
+          calories: 20,
+          fat: 7,
+          UserId: 1,
+          createdAt: "2019-01-30 19:46:18",
+          updatedAt: "2019-01-30 19:46:18"
+        }
+      ]).then(function() {
+        // Request the route that returns all examples
+        request.get("/api/ingredients").end(function(err, res) {
+          var responseStatus = res.status;
+          var responseBody = res.body;
 
-    db.Ingredients.bulkCreate([
-      {
-        name: "Chicken",
-        protein: 2,
-        // MeasurementID: null,
-        calories: 215,
-        fat: 15,
-        UserId: 1,
-        createdAt: "2019-01-30 19:46:18",
-        updatedAt: "2019-01-30 19:46:18"
-      },
-      {
-        name: "Rice",
-        protein: 1,
-        // MeasurementID: 1,
-        calories: 20,
-        fat: 7,
-        UserId: 1,
-        createdAt: "2019-01-30 19:46:18",
-        updatedAt: "2019-01-30 19:46:18"
-      }
-    ]).then(function() {
-      // Request the route that returns all examples
-      request.get("/api/ingredients").end(function(err, res) {
-        var responseStatus = res.status;
-        var responseBody = res.body;
+          // Run assertions on the response
 
-        // Run assertions on the response
+          expect(err).to.be.null;
 
-        expect(err).to.be.null;
+          expect(responseStatus).to.equal(200);
 
-        expect(responseStatus).to.equal(200);
+          expect(responseBody)
+            .to.be.an("array")
+            .that.has.lengthOf(2);
 
-        expect(responseBody)
-          .to.be.an("array")
-          .that.has.lengthOf(2);
+          expect(responseBody[0])
+            .to.be.an("object")
+            .that.includes({ name: "Chicken", fat: 15 });
 
-        expect(responseBody[0])
-          .to.be.an("object")
-          .that.includes({ name: "Chicken", fat: 15 });
+          expect(responseBody[1])
+            .to.be.an("object")
+            .that.includes({ name: "Rice", fat: 7 });
 
-        expect(responseBody[1])
-          .to.be.an("object")
-          .that.includes({ name: "Rice", fat: 7 });
-
-        // The `done` function is used to end any asynchronous tests
-        done();
+          // The `done` function is used to end any asynchronous tests
+          done();
+        });
       });
     });
   });

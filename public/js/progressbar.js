@@ -6,7 +6,7 @@ var x = d3.scale.linear().range([0, width]);
 
 var barHeight = 30;
 
-var color = d3.scale.ordinal().range(["steelblue", "#ccc"]);
+var color = d3.scale.ordinal().range(["#4CB7A5", "#ccc"]);
 
 var duration = 750,
   delay = 25;

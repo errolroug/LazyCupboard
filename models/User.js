@@ -44,6 +44,11 @@ module.exports = function(sequelize, DataTypes) {
     User.hasMany(models.Ingredients, {});
   };
 
+  User.associate = function(models) {
+    //associating Measurements with Ingredients
+    User.hasMany(models.Recipe, {});
+  };
+
   User.prototype.getPassword = function() {
     return this.password;
   };

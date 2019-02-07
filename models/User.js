@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   let User = sequelize.define("User", {
     firstName: {
       type: DataTypes.STRING,
@@ -10,6 +10,13 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1, 140]
+      }
+    },
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -39,15 +46,15 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  User.associate = function(models) {
+  User.associate = function (models) {
     //associating Measurements with Ingredients
     User.hasMany(models.Ingredients, {});
   };
 
-  User.prototype.getPassword = function() {
+  User.prototype.getPassword = function () {
     return this.password;
   };
-  User.prototype.validPassword = function(password) {
+  User.prototype.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
   };
 

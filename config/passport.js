@@ -9,13 +9,11 @@ passport.use(
       usernameField: "email",
       passReqToCallback: true
     },
-    (req, email, password, done) => {
+    (req, username, password, done) => {
+
+      var criteria = (username.indexOf('@') === -1) ? { username: username } : { email: username };
       //check if user is in db
-      db.User.findOne({
-        where: {
-          email: email
-        }
-      }).then(user => {
+      db.User.findOne({ where: criteria }).then(user => {
 
         if (!user) {
           console.log("User not found");
@@ -37,14 +35,14 @@ passport.use(
 );
 
 //Serialize will basically stored the user ID to session
-passport.serializeUser(function(user, done) {
-  done(null, user.dataValues.id); 
+passport.serializeUser(function (user, done) {
+  done(null, user.dataValues.id);
 });
 
 
 //Deserialize will then grab the ID stored in session and get the user info when needed
-passport.deserializeUser(function(id, done) {
-  db.User.findById(id).then(function(user) {
+passport.deserializeUser(function (id, done) {
+  db.User.findById(id).then(function (user) {
     if (user) {
       done(null, user.get());
     } else {

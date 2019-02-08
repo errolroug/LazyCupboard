@@ -44,6 +44,8 @@ module.exports = function(app) {
   // You do not render data in a browser using a POST request, this route is only being used to send info to the db.
   // To view the data in the db, use the GET request for ingredients above.
   app.post("/api/ingredientsAPI", function(req, res) {
+    //Variable that will save user ID
+    var userID = req.user.id;
     //Variable that will store the ingredient name that will be passed to ingredientsAPIscript
     var ingredientName = req.body;
     //Variable that will tell ingredientsAPIscript what action to take once response is received
@@ -65,6 +67,7 @@ module.exports = function(app) {
 
     //Calling the ingredientsAPIscript module.export function getIngredientInfo and passing it the parameters needed
     ingredientsAPIscript.getIngredientInfo(
+      userID,
       ingredientName,
       ingredientAction,
       addIngredientNutrition

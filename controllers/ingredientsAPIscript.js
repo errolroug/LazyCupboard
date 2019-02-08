@@ -10,6 +10,7 @@ var apiRoutes = require("../routes/apiRoutes");
 //API call must be wrapped in a module.exports function to allow other files to access it
 //Must also pass all required parameters to this function and assign them as variables within the {}
 module.exports.getIngredientInfo = function(
+  userID,
   ingredientName,
   ingredientAction,
   addIngredientNutrition
@@ -48,7 +49,8 @@ module.exports.getIngredientInfo = function(
       protein: foodProtein,
       fat: foodFat,
       carbs: foodCarbs,
-      checked: ""
+      checked: "",
+      UserId: userID
     };
 
     var ingredientNutrition = ingredient;

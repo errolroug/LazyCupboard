@@ -8,7 +8,7 @@ var ingredientsAPIscript = require("../controllers/ingredientsAPIscript");
 var axios = require("axios");
 
 // REQUIRE RECIPES API SCRIPT FILE
-// var recipesAPIscript = require("../models/recipesAPIscript");
+var recipesAPIscript = require("../controllers/recipesAPIscript");
 
 const bcrypt = require("bcryptjs");
 const passport = require("../config/passport");
@@ -64,7 +64,6 @@ module.exports = function(app) {
           }
         });
     };
-
     //Calling the ingredientsAPIscript module.export function getIngredientInfo and passing it the parameters needed
     ingredientsAPIscript.getIngredientInfo(
       userID,
@@ -76,51 +75,33 @@ module.exports = function(app) {
 
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
   app.post("/api/recipesAPI", function(req, res) {
+    //Sequelize code that will capture all 'checked' ingredients in the db for the logged in user
     db.Ingredients.findAll({
       where: { checked: "checked" }
     }).then(function(ing) {
-      var food = [];
+      //Variable to store the 'checked' ingredients, which will be sent to the API call
+      var food = "";
+      //For loop that will save the name of each 'checked' ingredient and append them together with a '+'
       for (var i = 0; i < ing.length; i++) {
-        food.push(ing[i].dataValues.name);
+        food = food + "+" + ing[i].dataValues.name;
       }
-      console.log(food);
-      var queryID = "fcb72d93";
-      var queryKey = "f10388ab91215f04c2c1a28330336b8d";
-      var queryUrl =
-        "https://api.edamam.com/search?q=" +
-        food +
-        "&app_id=" +
-        queryID +
-        "&app_key=" +
-        queryKey;
-
-      axios
-        .get(queryUrl)
-        .then(function(response) {
-          var recipes = response.data.hits;
-
-          // var recipesArray = [];
-          // for (let index = 0; index < hits.length; index++) {
-          //   var recipes = [];
-          //   recipes.push(hits[index].recipe.label);
-          //   recipes.push(hits[index].recipe.calories);
-          //   recipes.push(hits[index].recipe.dietLabels);
-          //   recipes.push(hits[index].recipe.ingredientLines);
-          //   recipesArray.push(recipes);
-          // }
-          res.send(recipes);
-        })
-        .catch(function(error) {
+      //Log what's being saved in the 'food' variable after for loop
+      console.log("In API Route: " + food);
+      //Variable that hold function for handling what comes back from API call
+      var sendRecipes = function(recipes) {
+        res.send(recipes).catch(function(error) {
           if (error) {
-            console.log(error);
+            // console.log(error);
             res.status(500).send("Recipes Internal Server Error");
             console.log("Recipes - NO RESULTS FOUND");
           }
         });
+      };
+      //Calling the recipessAPIscript module.export function getRecipesInfo and passing it the parameters needed
+      recipesAPIscript.getRecipesInfo(food, sendRecipes);
     });
-
-    // res.setHeader("Content-Type", "text/html")
   });
+
   app.get("/users/register", function(req, res) {
     res.render("register");
   });
@@ -224,8 +205,6 @@ module.exports = function(app) {
     res.redirect("/users/login");
   });
 
-  //COMMENTING THIS OUT FOR NOW_________________________________________________________
-  // Will add back to the file once the first get request works
   // Delete an example by id
   app.delete("/api/ingredient/:id", function(req, res) {
     db.Ingredients.destroy({ where: { id: req.params.id } }).then(function(

@@ -100,6 +100,7 @@ $(document).ready(function() {
         refreshIngredients(result);
         console.log(matchCount);
         if (matchCount > 0) {
+          existingIngredient = true;
           alert("You've already added " + apiIngredientName);
           return;
         }

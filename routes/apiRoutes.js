@@ -20,7 +20,7 @@ module.exports = function(app) {
 
   app.get("/api/ingredients/", function(req, res) {
     db.Ingredients.findAll({
-      include: [db.Measurements]
+      // include: [db.Measurements]
     }).then(function(dbIngredient) {
       res.json(dbIngredient);
     });
@@ -33,8 +33,8 @@ module.exports = function(app) {
     db.Ingredients.findOne({
       where: {
         id: req.params.id
-      },
-      include: [db.Measurements]
+      }
+      // include: [db.Measurements]
     }).then(function(dbIngredient) {
       res.json(dbIngredient);
     });
@@ -43,7 +43,32 @@ module.exports = function(app) {
   // POST INGREDIENT TO 'INGREDIENT' TABLE
   // You do not render data in a browser using a POST request, this route is only being used to send info to the db.
   // To view the data in the db, use the GET request for ingredients above.
-  app.post("/api/ingredientsAPI", ingredientsAPIscript);
+  app.post("/api/ingredientsAPI", function(req, res) {
+    //Variable that will store the ingredient name that will be passed to ingredientsAPIscript
+    var ingredientName = req.body;
+    //Variable that will tell ingredientsAPIscript what action to take once response is received
+    var ingredientAction = "post_to_db";
+    //Variable that saves the call back function needed by ingredientsAPIscript to perform the action needed
+    var addIngredientNutrition = function(ingredient) {
+      db.Ingredients.create(ingredient)
+        .then(function(newIngredient) {
+          res.json(newIngredient);
+        })
+        .catch(function(error) {
+          if (error) {
+            res.status(500).send(error);
+            console.log(error);
+          }
+        });
+    };
+
+    //Calling the ingredientsAPIscript module.export function getIngredientInfo and passing it the parameters needed
+    ingredientsAPIscript.getIngredientInfo(
+      ingredientName,
+      ingredientAction,
+      addIngredientNutrition
+    );
+  });
 
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
   app.post("/recipesAPI", recipesAPIscript);

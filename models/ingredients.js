@@ -9,13 +9,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     quantity: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true,
       defaultValue: 1,
       validate: { min: 0 }
     },
     calories: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       defaultValue: 0
     },
     fat: {

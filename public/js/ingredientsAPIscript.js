@@ -4,9 +4,24 @@ var db = require("../../models");
 // REQUIRE AXIOS FOR API CALL
 var axios = require("axios");
 
-module.exports = function getIngredientInfo(req, res) {
-  var food = req.body.ingredient;
+// REQUIRE API ROUTES FILE
+var apiRoutes = require("../../routes/apiRoutes");
+
+//API call must be wrapped in a module.exports function to allow other files to access it
+//Must also pass all required parameters to this function and assign them as variables within the {}
+module.exports.getIngredientInfo = function(
+  ingredientName,
+  ingredientAction,
+  addIngredientNutrition
+) {
+  //The ingredientName being passed to this file can only be passed as an object, so we must
+  //create a variable to access the property we want in that object.
+  var food = ingredientName.ingredient;
+
+  //Query ID is required by the API - see documentation on Edamam site
   var queryID = "80dab669";
+
+  //Query ID is required by the API - see documentation on Edamam site
   var queryKey = "bf81be851f5f242c3a6279af40337e79";
 
   //Run a request with axios to the Edamam API with the food item specified by var food
@@ -18,42 +33,32 @@ module.exports = function getIngredientInfo(req, res) {
     queryKey +
     "&ingr=" +
     food;
+  axios.get(queryUrl).then(function(response) {
+    var foodLabel = response.data.parsed[0].food.label;
+    var foodLabelName = foodLabel.split(",");
+    var foodCalories = response.data.parsed[0].food.nutrients.ENERC_KCAL;
+    var foodProtein = response.data.parsed[0].food.nutrients.PROCNT;
+    var foodFat = response.data.parsed[0].food.nutrients.FAT;
+    var foodCarbs = response.data.parsed[0].food.nutrients.CHOCDF;
 
-  axios
-    .get(queryUrl)
-    .then(function(response) {
-      var foodLabel = response.data.parsed[0].food.label;
-      var foodLabelName = foodLabel.split(",");
-      var foodCalories = response.data.parsed[0].food.nutrients.ENERC_KCAL;
-      var foodProtein = response.data.parsed[0].food.nutrients.PROCNT;
-      var foodFat = response.data.parsed[0].food.nutrients.FAT;
-      var foodCarbs = response.data.parsed[0].food.nutrients.CHOCDF;
+    //Create ingredient object to store the data being returned by the API call
+    ingredient = {
+      name: foodLabelName[0],
+      calories: foodCalories,
+      protein: foodProtein,
+      fat: foodFat,
+      carbs: foodCarbs
+    };
 
-      //Create ingredient object to store the data being returned by the API call
-      ingredient = {
-        name: foodLabelName[0],
-        calories: foodCalories,
-        protein: foodProtein,
-        fat: foodFat,
-        carbs: foodCarbs
-      };
+    var ingredientNutrition = ingredient;
+    var action = ingredientAction;
 
-      //Use the models (located in the models folder) to create a model for ingredients
-      db.Ingredients.create(ingredient)
-        .then(function(newIngredient) {
-          res.json(newIngredient);
-        })
-        .catch(function(error) {
-          if (error) {
-            res.status(500).send("Internal Server Error");
-            console.log("Ingredient Could not be inserted into DB");
-          }
-        });
-    })
-    .catch(function(error) {
-      if (error) {
-        res.status(500).send("Internal Server Error");
-        console.log("NO RESULTS FOUND");
-      }
-    });
+    if (action === "post_to_db") {
+      addIngredientNutrition(ingredientNutrition);
+    }
+
+    // if (action === "check_db") {
+    //   addIngredientNutrition(ingredientNutrition);
+    // }
+  });
 };

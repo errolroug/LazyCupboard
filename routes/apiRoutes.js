@@ -7,17 +7,17 @@ var db = require("../models");
 const bcrypt = require("bcryptjs");
 const passport = require("../config/passport");
 
-module.exports = function(app) {
+module.exports = function (app) {
   // GET ALL INGREDIENTS SAVED TO THE 'INGREDIENTS' TABLE
   // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below.
 
-  app.get("/api/ingredients/", function(req, res) {
+  app.get("/api/ingredients/", function (req, res) {
     //TODO : Move below findAll to a function "displayIngredients"
     let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1; // staging data for tests if no user logged in
     db.Ingredients.findAll({
       //1. Go to the models folder, use the Ingredients table and find all data for current user
       where: { UserId: userID }
-    }).then(function(dbIngredient) {
+    }).then(function (dbIngredient) {
       res.json(dbIngredient); //3. Send all info from 1 & 3 in a json response
     });
   });
@@ -25,14 +25,14 @@ module.exports = function(app) {
   // GET A SINGLE INGREDIENT SAVED TO THE 'INGREDIENTS' TABLE
   // See a single ingredient in json format vai the browser by using the site url + the route specified in the GET request below.
 
-  app.get("/api/ingredients/:id", function(req, res) {
+  app.get("/api/ingredients/:id", function (req, res) {
     db.Ingredients.findOne({
       //1. Go to the models folder, use the Ingredients table and find one record
       where: {
         id: req.params.id //2. Record must match the id specified by the user in the url of the GET request
       },
       include: [db.Measurements]
-    }).then(function(dbIngredient) {
+    }).then(function (dbIngredient) {
       //3. Join the Measurements table to the Ingredients table
       res.json(dbIngredient); //4. Send all info from 1 & 3 in a json response
     });
@@ -42,7 +42,7 @@ module.exports = function(app) {
   // You do not render data in a browser using a POST request, this route is only being used to send info to the db.
   // To view the data in the db, use the GET request for ingredients above.
 
-  app.post("/api/ingredientsAPI", function(req, res) {
+  app.post("/api/ingredientsAPI", function (req, res) {
     var food =
       process.env.NODE_ENV !== "test" ? req.body.ingredient : "chicken";
     //1. Save ingredient entered by user into the 'food' variable
@@ -61,7 +61,7 @@ module.exports = function(app) {
 
     axios
       .get(queryUrl)
-      .then(function(response) {
+      .then(function (response) {
         var foodLabel = response.data.parsed[0].food.label;
         var foodLabelName = foodLabel.split(",");
         var foodCalories = response.data.parsed[0].food.nutrients.ENERC_KCAL;
@@ -81,10 +81,10 @@ module.exports = function(app) {
 
         //Use the models (located in the models folder) to create a model for ingredients
         db.Ingredients.create(ingredient)
-          .then(function(newIngredient) {
+          .then(function (newIngredient) {
             res.status(200).send("OK");
           })
-          .catch(function(error) {
+          .catch(function (error) {
             if (error) {
               res.status(500).send("Internal Server Error");
               console.log("Ingredient Could not be inserted into DB", error);
@@ -92,7 +92,7 @@ module.exports = function(app) {
             }
           });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         if (error) {
           res.status(500).send("Internal Server Error");
           console.log("NO RESULTS FOUND", error);
@@ -101,15 +101,15 @@ module.exports = function(app) {
   });
 
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
-  app.post("/api/recipesAPI", function(req, res) {
+  app.post("/api/recipesAPI", function (req, res) {
+    db.Recipe.destroy({ where: { saved: false } })
     db.Ingredients.findAll({
       where: { checked: "checked" }
-    }).then(function(ing) {
+    }).then(function (ing) {
       var food = [];
       for (var i = 0; i < ing.length; i++) {
         food.push(ing[i].dataValues.name);
       }
-      console.log(food);
       var queryID = "fcb72d93";
       var queryKey = "f10388ab91215f04c2c1a28330336b8d";
       var queryUrl =
@@ -122,36 +122,43 @@ module.exports = function(app) {
 
       axios
         .get(queryUrl)
-        .then(function(response) {
-          var recipes = response.data.hits;
-
-          // var recipesArray = [];
-          // for (let index = 0; index < hits.length; index++) {
-          //   var recipes = [];
-          //   recipes.push(hits[index].recipe.label);
-          //   recipes.push(hits[index].recipe.calories);
-          //   recipes.push(hits[index].recipe.dietLabels);
-          //   recipes.push(hits[index].recipe.ingredientLines);
-          //   recipesArray.push(recipes);
-          // }
-          res.send(recipes);
+        .then(function (response) {
+          var responseArray = response.data.hits;
+          var recipes = []
+          for (var i = 0; i < responseArray.length; i++) {
+            recipes.push({
+              label: responseArray[i].recipe.label,
+              calories: Number(
+                (
+                  responseArray[i].recipe.calories /
+                  responseArray[i].recipe.yield
+                ).toFixed(0)
+              ),
+              url: responseArray[i].recipe.url,
+              image: responseArray[i].recipe.image,
+              recipeIngredient: responseArray[i].recipe.ingredients,
+              UserId: req.user.id
+            });
+          }
+          db.Recipe.bulkCreate(recipes).then(function (newRecipes) {
+            res.send(newRecipes);
+          })
         })
-        .catch(function(error) {
+        .catch(function (error) {
           if (error) {
             console.log(error);
             res.status(500).send("Recipes Internal Server Error");
-            console.log("Recipes - NO RESULTS FOUND");
           }
         });
     });
 
     // res.setHeader("Content-Type", "text/html")
   });
-  app.get("/users/register", function(req, res) {
+  app.get("/users/register", function (req, res) {
     res.render("register");
   });
 
-  app.get("/users/login", function(req, res) {
+  app.get("/users/login", function (req, res) {
     res.render("login");
   });
   //login user route
@@ -194,8 +201,6 @@ module.exports = function(app) {
         password2: res.body.password2
       });
     } else {
-      console.log(req.body.email);
-
       db.User.find({ where: { email: req.body.email } }).then(user => {
         if (user) {
           // console.log(user);
@@ -253,15 +258,14 @@ module.exports = function(app) {
   //COMMENTING THIS OUT FOR NOW_________________________________________________________
   // Will add back to the file once the first get request works
   // Delete an example by id
-  app.delete("/api/ingredient/:id", function(req, res) {
-    db.Ingredients.destroy({ where: { id: req.params.id } }).then(function(
+  app.delete("/api/ingredient/:id", function (req, res) {
+    db.Ingredients.destroy({ where: { id: req.params.id } }).then(function (
       dbIngredient
     ) {
       res.json(dbIngredient);
     });
   });
-  app.put("/api/ingredientToRecipe", function(req, res) {
-    console.log(req.body.checked);
+  app.put("/api/ingredientToRecipe", function (req, res) {
     if (req.body.checked === "true") {
       db.Ingredients.update(
         {
@@ -272,7 +276,7 @@ module.exports = function(app) {
             id: req.body.id
           }
         }
-      ).then(function() {
+      ).then(function () {
         res.status(200).send("OK");
       });
     } else {
@@ -285,9 +289,55 @@ module.exports = function(app) {
             id: req.body.id
           }
         }
-      ).then(function() {
+      ).then(function () {
         res.status(200).send("OK");
       });
     }
+  });
+  app.put("/api/saveRecipe", function (req, res) {
+    db.Recipe.update(
+      {
+        saved: true
+      },
+      {
+        where: {
+          id: req.body.id
+        }
+      }
+    ).then(function (response) {
+      res.status(200).send(req.body.id);
+    });
+  });
+  app.get("/api/readme.json", function (req, res) {
+    console.log("connection working");
+    db.Recipe.findAll({
+      where: {
+        UserId: req.user.id,
+        saved: true
+      }
+    })
+      .then(function (responseArray) {
+        var result = {
+          name: "flare",
+          children: [
+            {
+              name: "Total Calories",
+              children: []
+            }
+          ]
+        }
+        for (var i = 0; i < responseArray.length; i++) {
+          result.children[0].children.push({
+            name: responseArray[i].label,
+            size: responseArray[i].calories
+          });
+        }
+        console.log(result)
+        res.json(result)
+      })
+      .catch(err => {
+        // console.log(err);
+        return;
+      });
   });
 };

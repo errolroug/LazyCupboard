@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   let RecipeIngredient = sequelize.define("RecipeIngredient", {
     text: {
       type: DataTypes.STRING,
@@ -6,10 +6,14 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         len: [1, 300]
       }
+    },
+    weight: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   });
 
-  RecipeIngredient.associate = function(models) {
+  RecipeIngredient.associate = function (models) {
     // an ingredient belongs to a user
     RecipeIngredient.belongsTo(models.Recipe, {
       foreignKey: {

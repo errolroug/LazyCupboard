@@ -55,7 +55,7 @@ module.exports = function(app) {
       db.Ingredients.create(ingredient)
         .then(function(newIngredient) {
           res.json(newIngredient);
-          res.status(200).send("OK");
+          // res.status(200).send("OK");
         })
         .catch(function(error) {
           if (error) {
@@ -115,7 +115,7 @@ module.exports = function(app) {
 
   app.get("/users/login", (res, req, next) => {
     passport.authenticate("local", {
-      successRedirect: "/",
+      successRedirect: "/LazyCupboard",
       failureRedirect: "register"
       // failureFlash: true
     })(res, req, next);
@@ -124,7 +124,7 @@ module.exports = function(app) {
   app.post(
     "/users/login",
     passport.authenticate("local", {
-      successRedirect: "/",
+      successRedirect: "/LazyCupboard",
       failureRedirect: "register"
       // failureFlash: true
     })

@@ -105,8 +105,6 @@ module.exports = function(app) {
     });
   });
 
-
-
   app.get("/users/register", function(req, res) {
     res.render("register");
   });

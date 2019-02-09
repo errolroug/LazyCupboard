@@ -340,4 +340,12 @@ module.exports = function (app) {
         return;
       });
   });
+  app.delete("/api/myrecipes/:id", function (req, res) {
+    console.log(req.body.id)
+    db.Recipe.destroy({ where: { id: req.params.id } }).then(function (
+      response
+    ) {
+      res.json(response);
+    });
+  });
 };

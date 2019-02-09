@@ -50,7 +50,14 @@ $(document).ready(function () {
         url: "/api/saveRecipe",
         data: data
       });
+    },
+    deleteRecipe: function (id) {
+      return $.ajax({
+        url: "api/myrecipes/" + id,
+        type: "DELETE"
+      });
     }
+
   };
 
   // refreshIngredients gets new examples from the db and repopulates the list
@@ -292,6 +299,14 @@ $(document).ready(function () {
       window.location.assign("/recipe/" + response)
     });
   }
+  var deleteRecipeID = function (event) {
+
+    var id = $(this).attr("delID")
+
+    API.deleteRecipe(id).then(function (response) {
+      window.location.assign("/myrecipes")
+    });
+  }
 
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
@@ -301,6 +316,7 @@ $(document).ready(function () {
   $(document).on("click", ".check", addIngredienttoRecipe);
   $(document).on("click", ".collapse-table", ingredientListhideshow);
   $(document).on("click", ".save-recipe", saveRecipe);
+  $(document).on("click", ".delete-button-recipe", deleteRecipeID);
 
   // $(document).on("ready", ".collapsible", $('.collapsible').collapsible());
 });

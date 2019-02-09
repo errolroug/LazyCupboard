@@ -76,8 +76,10 @@ module.exports = function(app) {
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
   app.post("/api/recipesAPI", function(req, res) {
     //Sequelize code that will capture all 'checked' ingredients in the db for the logged in user
+    let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1;
+
     db.Ingredients.findAll({
-      where: { checked: "checked" }
+      where: { checked: "checked", UserId: userID }
     }).then(function(ing) {
       //Variable to store the 'checked' ingredients, which will be sent to the API call
       var food = "";

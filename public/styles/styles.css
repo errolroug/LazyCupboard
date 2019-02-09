@@ -107,6 +107,12 @@
   background-color: black;
 }
 
+.brand-logo,
+.card-title {
+  font-family: "Amatic SC", cursive;
+  /* font-size: 3em !important; */
+}
+
 @media only screen and (min-width: 730px) {
   .contain {
     height: 753px;

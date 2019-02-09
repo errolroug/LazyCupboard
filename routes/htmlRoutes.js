@@ -3,7 +3,11 @@ const { ensureAuthenticated } = require("../controllers/authController");
 
 module.exports = function(app) {
   // Load index page
-  app.get("/", ensureAuthenticated, function(req, res) {
+  app.get("/", (req, res) => {
+    res.render("homepage");
+  });
+
+  app.get("/LazyCupboard", ensureAuthenticated, function(req, res) {
     //TODO : Move below findAll to a function "displayIngredients"
     db.Ingredients.findAll({
       where: { UserId: req.user.id }
@@ -24,9 +28,7 @@ module.exports = function(app) {
       });
     });
   });
-  app.get("/LazyCupboard", (req, res) => {
-    res.render("homepage");
-  });
+
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {
     res.render("404");

@@ -63,3 +63,7 @@
 .recipecard-css{
 	height: 400px;
 }
+.brand-logo, .card-title {
+  font-family: "Amatic SC", cursive;
+  /* font-size: 3em !important; */
+}

@@ -141,7 +141,11 @@ module.exports = function (app) {
             });
           }
           db.Recipe.bulkCreate(recipes).then(function (newRecipes) {
-            res.send(newRecipes);
+            var recipetoSend = newRecipes
+            for (var i = 0; i < responseArray.length; i++) {
+              recipetoSend[i].dataValues.ingredients = recipes[i].recipeIngredient
+            }
+            res.send(recipetoSend);
           })
         })
         .catch(function (error) {

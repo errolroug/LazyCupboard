@@ -41,6 +41,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     });
   };
+  // Recipe.RecipeIngredient = Recipe.hasMany(RecipeIngredient);
 
   Recipe.associate = function (models) {
     //associating Measurements with Ingredients

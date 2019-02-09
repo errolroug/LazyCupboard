@@ -179,13 +179,13 @@ $(document).ready(function () {
       cardReveal.append(cardTitleReveal);
 
       var ul = $("<ul>").addClass("collection");
-      // for (var i = 0; i < data.ingredients.length; i++) {
-      //   var li = $("<li>").addClass(
-      //     "collection-item #eceff1 blue-grey lighten-5"
-      //   );
-      //   li.text(data.ingredients[i].text);
-      //   ul.append(li);
-      // }
+      for (var i = 0; i < data.ingredients.length; i++) {
+        var li = $("<li>").addClass(
+          "collection-item #eceff1 blue-grey lighten-5"
+        );
+        li.text(data.ingredients[i].text);
+        ul.append(li);
+      }
       cardReveal.append(ul);
 
       card.append(cardReveal);

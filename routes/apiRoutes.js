@@ -89,15 +89,16 @@ module.exports = function(app) {
       }
       //Log what's being saved in the 'food' variable after for loop
       console.log("In API Route: " + food);
+
       //Variable that hold function for handling what comes back from API call
       var sendRecipes = function(recipes) {
-        res.send(recipes).catch(function(error) {
-          if (error) {
-            // console.log(error);
-            res.status(500).send("Recipes Internal Server Error");
-            console.log("Recipes - NO RESULTS FOUND");
-          }
-        });
+        //Cannot use .catch -- replaced with if/else statement
+        if (recipes.length > 0) {
+          res.send(recipes);
+        } else {
+          res.status(500).send("Recipes Internal Server Error");
+          console.log("Recipes - NO RESULTS FOUND");
+        }
       };
       //Calling the recipessAPIscript module.export function getRecipesInfo and passing it the parameters needed
       recipesAPIscript.getRecipesInfo(food, sendRecipes);

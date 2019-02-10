@@ -207,6 +207,24 @@ module.exports = function(app) {
     // req.flash('success_msg', 'you are logged out')
     res.redirect("/users/login");
   });
+  //Below is our get request to find the user information page. So far it is returned as json and not as html
+  app.get("/api/user", function(req, res) {
+    let thisUser = process.env.NODE_ENV !== "test" ? req.user.id : 1;
+    db.User.find({
+      //1. Go to the models folder, use the Users table and find all data for current user
+      where: { id: thisUser }
+    }).then(function(dbUser) {
+      //return the data to the browser as json
+      res.send(dbUser);
+    });
+  });
+  //COMMENTING THIS OUT FOR NOW_________________________________________________________
+  //This is suppposed to create an update form for the user to change their information
+
+  // app.put("api/user", function(req,res){
+  //     let thisUser = process.env.NODE_ENV !== "test" ? req.user.id : 1;
+  //     db.User.update({});
+  //   })
 
   // Delete an example by id
   app.delete("/api/ingredient/:id", function(req, res) {

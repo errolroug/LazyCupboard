@@ -1,9 +1,15 @@
 // REQUIRE MODELS FOLDER WHICH CONTAIN TABLE MODELS
 var db = require("../models");
 
-// REQUIRE AXIOS FOR API CALL - Need to remove this later once API call is saved in a separate file
+// REQUIRE INGREDIENTS API SCRIPT FILE
+var ingredientsAPIscript = require("../controllers/ingredientsAPIscript");
+
+// REQUIRE AXIOS FOR API CALL
 var axios = require("axios");
-var db = require("../models");
+
+// REQUIRE RECIPES API SCRIPT FILE
+var recipesAPIscript = require("../controllers/recipesAPIscript");
+
 const bcrypt = require("bcryptjs");
 const passport = require("../config/passport");
 
@@ -11,14 +17,12 @@ module.exports = function (app) {
   // GET ALL INGREDIENTS SAVED TO THE 'INGREDIENTS' TABLE
   // See all ingredients in json format via the browser by using the site url + the route specified in the GET request below.
 
-  app.get("/api/ingredients/", function (req, res) {
-    //TODO : Move below findAll to a function "displayIngredients"
-    let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1; // staging data for tests if no user logged in
+  app.get("/api/ingredients", function (req, res) {
+    let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1;
     db.Ingredients.findAll({
-      //1. Go to the models folder, use the Ingredients table and find all data for current user
       where: { UserId: userID }
     }).then(function (dbIngredient) {
-      res.json(dbIngredient); //3. Send all info from 1 & 3 in a json response
+      res.json(dbIngredient);
     });
   });
 
@@ -27,103 +31,71 @@ module.exports = function (app) {
 
   app.get("/api/ingredients/:id", function (req, res) {
     db.Ingredients.findOne({
-      //1. Go to the models folder, use the Ingredients table and find one record
       where: {
-        id: req.params.id //2. Record must match the id specified by the user in the url of the GET request
+        id: req.params.id
       },
       include: [db.Measurements]
     }).then(function (dbIngredient) {
-      //3. Join the Measurements table to the Ingredients table
-      res.json(dbIngredient); //4. Send all info from 1 & 3 in a json response
+      res.json(dbIngredient);
     });
   });
 
   // POST INGREDIENT TO 'INGREDIENT' TABLE
   // You do not render data in a browser using a POST request, this route is only being used to send info to the db.
   // To view the data in the db, use the GET request for ingredients above.
-
   app.post("/api/ingredientsAPI", function (req, res) {
-    var food =
-      process.env.NODE_ENV !== "test" ? req.body.ingredient : "chicken";
-    //1. Save ingredient entered by user into the 'food' variable
-    var queryID = "80dab669"; //2. Save ID for API call, NOTE: This ID is exclusively used for individual food item lookup
-    var queryKey = "bf81be851f5f242c3a6279af40337e79"; //3. Save API key, NOTE: This key is exclusively used for individual food item lookup
-
-    // Run a request with axios to the Edamam API with the food item specified by var food
-    //NOTE: You can add additional parameters to this request, see documentation
-    var queryUrl =
-      "https://api.edamam.com/api/food-database/parser?app_id=" +
-      queryID +
-      "&app_key=" +
-      queryKey +
-      "&ingr=" +
-      food;
-
-    axios
-      .get(queryUrl)
-      .then(function (response) {
-        var foodLabel = response.data.parsed[0].food.label;
-        var foodLabelName = foodLabel.split(",");
-        var foodCalories = response.data.parsed[0].food.nutrients.ENERC_KCAL;
-        var foodProtein = response.data.parsed[0].food.nutrients.PROCNT;
-        var foodFat = response.data.parsed[0].food.nutrients.FAT;
-        var foodCarbs = response.data.parsed[0].food.nutrients.CHOCDF;
-
-        //Create ingredient object to store the data being returned by the API call
-        ingredient = {
-          name: foodLabelName[0],
-          calories: foodCalories,
-          protein: foodProtein,
-          fat: foodFat,
-          carbs: foodCarbs,
-          UserId: req.user.id
-        };
-
-        //Use the models (located in the models folder) to create a model for ingredients
-        db.Ingredients.create(ingredient)
-          .then(function (newIngredient) {
-            res.status(200).send("OK");
-          })
-          .catch(function (error) {
-            if (error) {
-              res.status(500).send("Internal Server Error");
-              console.log("Ingredient Could not be inserted into DB", error);
-              console.log(ingredient);
-            }
-          });
-      })
-      .catch(function (error) {
-        if (error) {
-          res.status(500).send("Internal Server Error");
-          console.log("NO RESULTS FOUND", error);
-        }
-      });
+    //Variable that will save user ID
+    var userID = req.user.id;
+    //Variable that will store the ingredient name that will be passed to ingredientsAPIscript
+    var ingredientName = req.body;
+    //Variable that will tell ingredientsAPIscript what action to take once response is received
+    var ingredientAction = "post_to_db";
+    //Variable that saves the call back function needed by ingredientsAPIscript to perform the action needed
+    var addIngredientNutrition = function (ingredient) {
+      db.Ingredients.create(ingredient)
+        .then(function (newIngredient) {
+          res.json(newIngredient);
+          // res.status(200).send("OK");
+        })
+        .catch(function (error) {
+          if (error) {
+            res.status(500).send(error);
+            console.log(error);
+          }
+        });
+    };
+    //Calling the ingredientsAPIscript module.export function getIngredientInfo and passing it the parameters needed
+    ingredientsAPIscript.getIngredientInfo(
+      userID,
+      ingredientName,
+      ingredientAction,
+      addIngredientNutrition
+    );
   });
 
   // GET RECIPES FROM API USING USER SELECTED INGREDIENTS
   app.post("/api/recipesAPI", function (req, res) {
+    //Sequelize code that will capture all 'checked' ingredients in the db for the logged in user
+    let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1;
     db.Recipe.destroy({ where: { saved: false } })
-    db.Ingredients.findAll({
-      where: { checked: "checked" }
-    }).then(function (ing) {
-      var food = [];
-      for (var i = 0; i < ing.length; i++) {
-        food.push(ing[i].dataValues.name);
-      }
-      var queryID = "fcb72d93";
-      var queryKey = "f10388ab91215f04c2c1a28330336b8d";
-      var queryUrl =
-        "https://api.edamam.com/search?q=" +
-        food +
-        "&app_id=" +
-        queryID +
-        "&app_key=" +
-        queryKey;
 
-      axios
-        .get(queryUrl)
-        .then(function (response) {
-          var responseArray = response.data.hits;
+    db.Ingredients.findAll({
+      where: { checked: "checked", UserId: userID }
+    }).then(function (ing) {
+      //Variable to store the 'checked' ingredients, which will be sent to the API call
+      var food = "";
+      //For loop that will save the name of each 'checked' ingredient and append them together with a '+'
+      for (var i = 0; i < ing.length; i++) {
+        food = food + "+" + ing[i].dataValues.name;
+      }
+      //Log what's being saved in the 'food' variable after for loop
+      console.log("In API Route: " + food);
+
+      //Variable that hold function for handling what comes back from API call
+      var sendRecipes = function (response) {
+        //Cannot use .catch -- replaced with if/else statement
+        if (response.length > 0) {
+          var responseArray = response;
           var recipes = []
           for (var i = 0; i < responseArray.length; i++) {
             recipes.push({
@@ -147,17 +119,16 @@ module.exports = function (app) {
             }
             res.send(recipetoSend);
           })
-        })
-        .catch(function (error) {
-          if (error) {
-            console.log(error);
-            res.status(500).send("Recipes Internal Server Error");
-          }
-        });
+        } else {
+          res.status(500).send("Recipes Internal Server Error");
+          console.log("Recipes - NO RESULTS FOUND");
+        }
+      };
+      //Calling the recipessAPIscript module.export function getRecipesInfo and passing it the parameters needed
+      recipesAPIscript.getRecipesInfo(food, sendRecipes);
     });
-
-    // res.setHeader("Content-Type", "text/html")
   });
+
   app.get("/users/register", function (req, res) {
     res.render("register");
   });
@@ -169,7 +140,7 @@ module.exports = function (app) {
 
   app.get("/users/login", (res, req, next) => {
     passport.authenticate("local", {
-      successRedirect: "/",
+      successRedirect: "/LazyCupboard",
       failureRedirect: "register"
       // failureFlash: true
     })(res, req, next);
@@ -178,7 +149,7 @@ module.exports = function (app) {
   app.post(
     "/users/login",
     passport.authenticate("local", {
-      successRedirect: "/",
+      successRedirect: "/LazyCupboard",
       failureRedirect: "register"
       // failureFlash: true
     })
@@ -258,9 +229,25 @@ module.exports = function (app) {
     // req.flash('success_msg', 'you are logged out')
     res.redirect("/users/login");
   });
-
+  //Below is our get request to find the user information page. So far it is returned as json and not as html
+  app.get("/api/user", function (req, res) {
+    let thisUser = process.env.NODE_ENV !== "test" ? req.user.id : 1;
+    db.User.find({
+      //1. Go to the models folder, use the Users table and find all data for current user
+      where: { id: thisUser }
+    }).then(function (dbUser) {
+      //return the data to the browser as json
+      res.send(dbUser);
+    });
+  });
   //COMMENTING THIS OUT FOR NOW_________________________________________________________
-  // Will add back to the file once the first get request works
+  //This is suppposed to create an update form for the user to change their information
+
+  // app.put("api/user", function(req,res){
+  //     let thisUser = process.env.NODE_ENV !== "test" ? req.user.id : 1;
+  //     db.User.update({});
+  //   })
+
   // Delete an example by id
   app.delete("/api/ingredient/:id", function (req, res) {
     db.Ingredients.destroy({ where: { id: req.params.id } }).then(function (

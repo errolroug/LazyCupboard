@@ -4,7 +4,11 @@ const startOfToday = require("date-fns/start_of_today");
 
 module.exports = function (app) {
   // Load index page
-  app.get("/", ensureAuthenticated, function (req, res) {
+  app.get("/", (req, res) => {
+    res.render("homepage");
+  });
+
+  app.get("/LazyCupboard", ensureAuthenticated, function (req, res) {
     //TODO : Move below findAll to a function "displayIngredients"
     db.Ingredients.findAll({
       where: { UserId: req.user.id }

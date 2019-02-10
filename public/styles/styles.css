@@ -67,3 +67,74 @@
   font-family: "Amatic SC", cursive;
   /* font-size: 3em !important; */
 }
+
+.contain {
+  height: 640px;
+  overflow: hidden;
+  display: block;
+  position: relative;
+  object-fit: contain;
+}
+
+.landing-image {
+  width: 100%;
+  max-height: 100%;
+}
+
+.contain .signUpBtn {
+  position: absolute;
+  bottom: 10%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 20px;
+  /* padding: 12px 24px; */
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.contain .signUpBtn:hover {
+  background-color: black;
+}
+
+.contain .logInBtn {
+  position: absolute;
+  bottom: 10%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 20px;
+  /* padding: 12px 24px; */
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.contain .logInBtn:hover {
+  background-color: black;
+}
+
+.brand-logo,
+.card-title {
+  font-family: "Amatic SC", cursive;
+  /* font-size: 3em !important; */
+}
+
+@media only screen and (min-width: 730px) {
+  .contain {
+    height: 753px;
+  }
+  .contain .logInBtn {
+    bottom: 10%;
+    left: 65%;
+  }
+  .contain .signUpBtn {
+    bottom: 10%;
+    left: 30%;
+  }
+}

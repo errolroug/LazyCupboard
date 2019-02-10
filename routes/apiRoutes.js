@@ -95,26 +95,25 @@ module.exports = function (app) {
       var sendRecipes = function (response) {
         //Cannot use .catch -- replaced with if/else statement
         if (response.length > 0) {
-          var responseArray = response;
           var recipes = []
-          for (var i = 0; i < responseArray.length; i++) {
+          for (var i = 0; i < response.length; i++) {
             recipes.push({
-              label: responseArray[i].recipe.label,
+              label: response[i].recipe.label,
               calories: Number(
                 (
-                  responseArray[i].recipe.calories /
-                  responseArray[i].recipe.yield
+                  response[i].recipe.calories /
+                  response[i].recipe.yield
                 ).toFixed(0)
               ),
-              url: responseArray[i].recipe.url,
-              image: responseArray[i].recipe.image,
-              recipeIngredient: responseArray[i].recipe.ingredients,
+              url: response[i].recipe.url,
+              image: response[i].recipe.image,
+              recipeIngredient: response[i].recipe.ingredients,
               UserId: req.user.id
             });
           }
           db.Recipe.bulkCreate(recipes).then(function (newRecipes) {
             var recipetoSend = newRecipes
-            for (var i = 0; i < responseArray.length; i++) {
+            for (var i = 0; i < response.length; i++) {
               recipetoSend[i].dataValues.ingredients = recipes[i].recipeIngredient
             }
             res.send(recipetoSend);

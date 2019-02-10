@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   let Recipe = sequelize.define("Recipe", {
     label: {
       type: DataTypes.STRING,
@@ -18,10 +18,22 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         len: [1, 400]
       }
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    saved: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    favorite: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   });
 
-  Recipe.associate = function(models) {
+  Recipe.associate = function (models) {
     // an ingredient belongs to a user
     Recipe.belongsTo(models.User, {
       foreignKey: {
@@ -29,10 +41,15 @@ module.exports = function(sequelize, DataTypes) {
       }
     });
   };
+  // Recipe.RecipeIngredient = Recipe.hasMany(RecipeIngredient);
 
-  Recipe.associate = function(models) {
+  Recipe.associate = function (models) {
     //associating Measurements with Ingredients
-    Recipe.hasMany(models.RecipeIngredient, {});
+    Recipe.hasMany(models.RecipeIngredient, {
+      foreignKey: {
+        allowNull: false
+      }
+    });
   };
 
   return Recipe;

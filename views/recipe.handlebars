@@ -1,0 +1,14 @@
+<div class="row">
+    <a href="{{url}}" target="_blank">
+        <h3>{{label}}</h3>
+    </a>
+    <ul class="collection with-header">
+        <li class="collection-header">
+            <h4>Ingredients:</h4>
+        </li>
+        {{#each ingredients}}
+        <li class="collection-item">{{ingredient}}</li>
+        {{/each}}
+    </ul>
+    <p><a href="{{url}}" target="_blank">Click me </a>to go to see the steps</p>
+</div>

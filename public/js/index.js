@@ -1,6 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function () {
   $("select").formSelect();
   $(".collapsible").collapsible();
+  $(".dropdown-trigger").dropdown();
 
   // $('.collapsible').collapsible();
 
@@ -15,7 +16,7 @@ $(document).ready(function() {
 
   // The API object contains methods for each kind of request we'll make
   var API = {
-    saveIngredient: function(ingredient) {
+    saveIngredient: function (ingredient) {
       return $.ajax({
         headers: {
           "Content-Type": "application/json"
@@ -25,30 +26,44 @@ $(document).ready(function() {
         data: JSON.stringify(ingredient)
       });
     },
-    getIngredients: function() {
+    getIngredients: function () {
       return $.ajax({
         url: "api/ingredients",
         type: "GET"
       });
     },
-    deleteExample: function(id) {
+    deleteExample: function (id) {
       return $.ajax({
         url: "api/examples/" + id,
         type: "DELETE"
       });
     },
-    getRecipes: function() {
+    getRecipes: function () {
       return $.ajax({
         url: "api/recipesAPI",
         type: "POST"
       });
+    },
+    savingRecipe(data) {
+      return $.ajax({
+        method: "PUT",
+        url: "/api/saveRecipe",
+        data: data
+      });
+    },
+    deleteRecipe: function (id) {
+      return $.ajax({
+        url: "api/myrecipes/" + id,
+        type: "DELETE"
+      });
     }
+
   };
 
   // refreshIngredients gets new examples from the db and repopulates the list
-  var refreshIngredients = function() {
-    API.getIngredients().then(function(data) {
-      var $ingredients = data.map(function(data) {
+  var refreshIngredients = function () {
+    API.getIngredients().then(function (data) {
+      var $ingredients = data.map(function (data) {
         var $tr = $("<tr>");
         $tr.attr({ dataID: data.id });
         var td = $("<td>");
@@ -114,10 +129,9 @@ $(document).ready(function() {
       $tbodyIngredientList.append($ingredients);
     });
   };
-  var displayRecipes = function(data) {
+  var displayRecipes = function (data) {
     var tableIng = $("#tbody-ingredientList").addClass("hide");
-    console.log(tableIng);
-    var $recipes = data.map(function(data) {
+    var $recipes = data.map(function (data) {
       // var row = $("<div>").addClass("row");
 
       var col = $("<div>").addClass("col s12 m6 l4");
@@ -125,7 +139,7 @@ $(document).ready(function() {
       var cardImg = $("<div>").addClass(
         "card-image waves-effect waves-block waves-light div-image-size"
       );
-      var rcpImg = $("<img>").attr({ src: data.recipe.image });
+      var rcpImg = $("<img>").attr({ src: data.image });
       rcpImg.addClass("activator image-size");
       cardImg.append(rcpImg);
 
@@ -136,7 +150,7 @@ $(document).ready(function() {
       var cardTitle = $("<span>").addClass(
         "card-title activator grey-text text-darken-4"
       );
-      cardTitle.text(data.recipe.label);
+      cardTitle.text(data.label);
       var cardTitleiClass = $("<i>").addClass("material-icons right");
       cardTitleiClass.text("more_vert");
       cardTitle.append(cardTitleiClass);
@@ -156,9 +170,7 @@ $(document).ready(function() {
         "card-title grey-text text-darken-4"
       );
       cardTitleReveal.text(
-        "Ingredients (" +
-          (data.recipe.calories / data.recipe.yield).toFixed(0) +
-          " Total Calories)"
+        "Ingredients (" + data.calories + " Total Calories)"
       );
       var cardTitleiRevealClass = $("<i>").addClass("material-icons right");
       cardTitleiRevealClass.text("close");
@@ -167,11 +179,11 @@ $(document).ready(function() {
       cardReveal.append(cardTitleReveal);
 
       var ul = $("<ul>").addClass("collection");
-      for (var i = 0; i < data.recipe.ingredients.length; i++) {
+      for (var i = 0; i < data.ingredients.length; i++) {
         var li = $("<li>").addClass(
           "collection-item #eceff1 blue-grey lighten-5"
         );
-        li.text(data.recipe.ingredients[i].text);
+        li.text(data.ingredients[i].text);
         ul.append(li);
       }
       cardReveal.append(ul);
@@ -182,13 +194,11 @@ $(document).ready(function() {
       // row.append(col);
 
       var cardAction = $("<div>").addClass("card-action");
-      var addButton = $("<button>").addClass("btn waves-effect waves-light");
-      addButton.attr({ type: "submit", name: "action" });
-      addButton.text(
-        "Prepare (" +
-          (data.recipe.calories / data.recipe.yield).toFixed(0) +
-          " Cal)"
+      var addButton = $("<button>").addClass(
+        "btn waves-effect waves-light save-recipe"
       );
+      addButton.attr({ type: "submit", name: "action", recipeID: data.id });
+      addButton.text("Prepare (" + data.calories + " Cal)");
 
       var iclassbtn = $("<i>").addClass("material-icons right");
       iclassbtn.text("send");
@@ -209,7 +219,7 @@ $(document).ready(function() {
 
   // handleFormSubmit is called whenever we submit a new example
   // Save the new example to the db and refresh the list
-  var handleFormSubmit = function(event) {
+  var handleFormSubmit = function (event) {
     event.preventDefault();
 
     var ingredient = {
@@ -222,7 +232,7 @@ $(document).ready(function() {
       return;
     }
 
-    API.saveIngredient(ingredient).then(function(result) {
+    API.saveIngredient(ingredient).then(function (result) {
       console.log(result);
       refreshIngredients(result);
     });
@@ -233,33 +243,33 @@ $(document).ready(function() {
 
   // handleDeleteBtnClick is called when an example's delete button is clicked
   // Remove the example from the db and refresh the list
-  var handleDeleteBtnClick = function() {
+  var handleDeleteBtnClick = function () {
     var idToDelete = $(this)
       .parent()
       .attr("data-id");
 
-    API.deleteExample(idToDelete).then(function() {
+    API.deleteExample(idToDelete).then(function () {
       refreshIngredients();
     });
   };
 
-  var removeIngredient = function() {
+  var removeIngredient = function () {
     $.ajax({
       method: "DELETE",
       url: "/api/ingredient/" + this.id
-    }).then(function(ingredients) {
+    }).then(function (ingredients) {
       refreshIngredients(ingredients);
     });
   };
 
-  var findRecipes = function(event) {
+  var findRecipes = function (event) {
     event.preventDefault();
-    API.getRecipes().then(function(response) {
+    API.getRecipes().then(function (response) {
       console.log(response);
       displayRecipes(response);
     });
   };
-  var addIngredienttoRecipe = function(event) {
+  var addIngredienttoRecipe = function (event) {
     var data = {
       id: this.id,
       checked: event.currentTarget.checked
@@ -272,7 +282,7 @@ $(document).ready(function() {
       data: data
     });
   };
-  var ingredientListhideshow = function(event) {
+  var ingredientListhideshow = function (event) {
     if ($("#tbody-ingredientList").attr("class") === "hide") {
       $("#collapse-ing-table").text("unfold_less");
       $("#tbody-ingredientList").removeClass("hide");
@@ -281,6 +291,22 @@ $(document).ready(function() {
       $("#collapse-ing-table").text("unfold_more");
     }
   };
+  var saveRecipe = function (event) {
+    var data = {
+      id: $(this).attr("recipeid")
+    };
+    API.savingRecipe(data).then(function (response) {
+      window.location.assign("/recipe/" + response)
+    });
+  }
+  var deleteRecipeID = function (event) {
+
+    var id = $(this).attr("delID")
+
+    API.deleteRecipe(id).then(function (response) {
+      window.location.assign("/myrecipes")
+    });
+  }
 
   // Add event listeners to the submit and delete buttons
   $submitBtn.on("submit", handleFormSubmit);
@@ -289,6 +315,8 @@ $(document).ready(function() {
   $(document).on("click", "#find-recipes", findRecipes);
   $(document).on("click", ".check", addIngredienttoRecipe);
   $(document).on("click", ".collapse-table", ingredientListhideshow);
+  $(document).on("click", ".save-recipe", saveRecipe);
+  $(document).on("click", ".delete-button-recipe", deleteRecipeID);
 
   // $(document).on("ready", ".collapsible", $('.collapsible').collapsible());
 });

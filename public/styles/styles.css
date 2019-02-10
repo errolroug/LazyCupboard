@@ -48,12 +48,24 @@
 }
 .div-image-size {
   max-height: auto;
-  max-width: 45%;
+	max-width: 45%;
+}
+
+.delete-button-recipe{
+	margin: auto
+
 }
 .image-size {
   display: block;
   width: 100%;
   height: auto;
+}
+.recipecard-css{
+	height: 400px;
+}
+.brand-logo, .card-title {
+  font-family: "Amatic SC", cursive;
+  /* font-size: 3em !important; */
 }
 
 .contain {

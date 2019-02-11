@@ -135,7 +135,7 @@ $(document).ready(function() {
 
       var col = $("<div>").addClass("col s12 m6 l4");
       var card = $("<div>").addClass("card card-css center-align hoverable");
-      card.attr("id", data.uri)
+      card.attr("id", data.uri);
       var cardImg = $("<div>").addClass(
         "card-image waves-effect waves-block waves-light div-image-size"
       );

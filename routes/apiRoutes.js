@@ -117,7 +117,7 @@ module.exports = function(app) {
               include: [db.RecipeIngredient]
             }).then(function(dbResponse) {
               counteri++;
-              if (counteri == response.length) {
+              if (counteri === response.length) {
                 db.Recipe.findAll({
                   include: [db.RecipeIngredient]
                 }).then(function(responsetobeSent) {

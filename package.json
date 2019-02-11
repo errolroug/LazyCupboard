@@ -7,16 +7,25 @@
     "start": "node server.js",
     "lint": "eslint **/*.js --quiet",
     "fix": "eslint --fix .",
-    "test": "npm run lint && NODE_ENV=test mocha -u tdd --reporter spec --exit"
+    "test": "npm run lint && cross-env NODE_ENV=test mocha -u tdd --reporter spec --exit"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.{js,scss}": [
+        "some command",
+        "git add"
+      ]
+    },
+    "ignore": [
+      "**/dist/*.min.js"
+    ]
   },
   "license": "ISC",
   "dependencies": {
-    "@types/date-fns": "^2.6.0",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
-    "date-fns": "^1.30.1",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
@@ -25,15 +34,23 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
+    "prettier": "^1.16.3",
     "sequelize": "^4.38.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^4.2.1",
+    "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.2",
-    "mocha": "^5.2.0",
-    "prettier": "^1.13.7"
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.2",
+    "mocha": "^5.2.0"
+  },
+  "husky": {
+    "lint-staged": {
+      "pre-commit": "npm run fix"
+    }
   }
 }

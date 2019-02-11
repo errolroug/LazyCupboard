@@ -11,7 +11,7 @@ var color = d3.scale.ordinal().range(["#4CB7A5", "#ccc"]);
 var duration = 750,
   delay = 25;
 
-var partition = d3.layout.partition().value(function (d) {
+var partition = d3.layout.partition().value(function(d) {
   return d.size;
 });
 
@@ -44,8 +44,8 @@ svg
   .append("line")
   .attr("y1", "100%");
 
-d3.json("/api/readme.json", function (error, root) {
-  console.log(root)
+d3.json("/api/readme.json", function(error, root) {
+  console.log(root);
   if (error) {
     throw error;
   }
@@ -67,7 +67,7 @@ function down(d, i) {
   // Entering nodes immediately obscure the clicked-on bar, so hide it.
   exit
     .selectAll("rect")
-    .filter(function (p) {
+    .filter(function(p) {
       return p === d;
     })
     .style("fill-opacity", 1e-6);
@@ -86,7 +86,7 @@ function down(d, i) {
   // Update the x-scale domain.
   x.domain([
     0,
-    d3.max(d.children, function (d) {
+    d3.max(d.children, function(d) {
       return d.value;
     })
   ]).nice();
@@ -102,10 +102,10 @@ function down(d, i) {
   var enterTransition = enter
     .transition()
     .duration(duration)
-    .delay(function (d, i) {
+    .delay(function(d, i) {
       return i * delay;
     })
-    .attr("transform", function (d, i) {
+    .attr("transform", function(d, i) {
       return "translate(0," + barHeight * i * 1.2 + ")";
     });
 
@@ -115,10 +115,10 @@ function down(d, i) {
   // Transition entering rects to the new x-scale.
   enterTransition
     .select("rect")
-    .attr("width", function (d) {
+    .attr("width", function(d) {
       return x(d.value);
     })
-    .style("fill", function (d) {
+    .style("fill", function(d) {
       return color(!!d.children);
     });
 
@@ -130,7 +130,7 @@ function down(d, i) {
     .remove();
 
   // Transition exiting bars to the new x-scale.
-  exitTransition.selectAll("rect").attr("width", function (d) {
+  exitTransition.selectAll("rect").attr("width", function(d) {
     return x(d.value);
   });
 
@@ -155,7 +155,7 @@ function up(d) {
 
   // Enter the new bars for the clicked-on data's parent.
   var enter = bar(d.parent)
-    .attr("transform", function (d, i) {
+    .attr("transform", function(d, i) {
       return "translate(0," + barHeight * i * 1.2 + ")";
     })
     .style("opacity", 1e-6);
@@ -164,10 +164,10 @@ function up(d) {
   // Exiting nodes will obscure the parent bar, so hide it.
   enter
     .select("rect")
-    .style("fill", function (d) {
+    .style("fill", function(d) {
       return color(!!d.children);
     })
-    .filter(function (p) {
+    .filter(function(p) {
       return p === d;
     })
     .style("fill-opacity", 1e-6);
@@ -175,7 +175,7 @@ function up(d) {
   // Update the x-scale domain.
   x.domain([
     0,
-    d3.max(d.parent.children, function (d) {
+    d3.max(d.parent.children, function(d) {
       return d.value;
     })
   ]).nice();
@@ -197,10 +197,10 @@ function up(d) {
   // When the entering parent rect is done, make it visible!
   enterTransition
     .select("rect")
-    .attr("width", function (d) {
+    .attr("width", function(d) {
       return x(d.value);
     })
-    .each("end", function (p) {
+    .each("end", function(p) {
       if (p === d) {
         d3.select(this).style("fill-opacity", null);
       }
@@ -211,7 +211,7 @@ function up(d) {
     .selectAll("g")
     .transition()
     .duration(duration)
-    .delay(function (d, i) {
+    .delay(function(d, i) {
       return i * delay;
     })
     .attr("transform", stack(d.index));
@@ -222,7 +222,7 @@ function up(d) {
   // Transition exiting rects to the new scale and fade to parent color.
   exitTransition
     .select("rect")
-    .attr("width", function (d) {
+    .attr("width", function(d) {
       return x(d.value);
     })
     .style("fill", color(true));
@@ -251,7 +251,7 @@ function bar(d) {
     .data(d.children)
     .enter()
     .append("g")
-    .style("cursor", function (d) {
+    .style("cursor", function(d) {
       return !d.children ? null : "pointer";
     })
     .on("click", down);
@@ -262,13 +262,13 @@ function bar(d) {
     .attr("y", barHeight / 2)
     .attr("dy", ".35em")
     .style("text-anchor", "end")
-    .text(function (d) {
+    .text(function(d) {
       return d.name;
     });
 
   bar
     .append("rect")
-    .attr("width", function (d) {
+    .attr("width", function(d) {
       return x(d.value);
     })
     .attr("height", barHeight);
@@ -279,7 +279,7 @@ function bar(d) {
 // A stateful closure for stacking bars horizontally.
 function stack(i) {
   var x0 = 0;
-  return function (d) {
+  return function(d) {
     var tx = "translate(" + x0 + "," + barHeight * i * 1.2 + ")";
     x0 += x(d.value);
     return tx;

@@ -1,6 +1,6 @@
 # Lazy Cupboard
 
-# Welcome to LazyCupboard
+## Welcome to LazyCupboard
 
 
 Lazy cupboard is a fresh, new way to organize your recipes and manage your meals in a health-consious and budget friendly-way. 
@@ -10,9 +10,7 @@ This project gives structure to the user's eating habbits, while keeping variety
 Lazy cupboard helps people save money and live more healthy lives by eating out less.
 
 
-
 ### How it Works
-
 
 Lazy Cupboard takes care of the greuling process of making recipes and gives time back to the user.
 

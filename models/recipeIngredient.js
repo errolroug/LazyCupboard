@@ -1,4 +1,5 @@
-module.exports = function(sequelize, DataTypes) {
+/* eslint-disable prettier/prettier */
+module.exports = function (sequelize, DataTypes) {
   let RecipeIngredient = sequelize.define("RecipeIngredient", {
     text: {
       type: DataTypes.STRING,
@@ -13,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  RecipeIngredient.associate = function(models) {
+  RecipeIngredient.associate = function (models) {
     // an ingredient belongs to a user
     RecipeIngredient.belongsTo(models.Recipe, {
       foreignKey: {

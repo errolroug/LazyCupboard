@@ -1,18 +1,20 @@
 var db = require("../models");
 const { ensureAuthenticated } = require("../controllers/authController");
 const startOfToday = require("date-fns/start_of_today");
+const getRecipebyURI = require("../controllers/recipeIngredientsAPIscript");
+const { Op } = require('sequelize')
 
-module.exports = function(app) {
+module.exports = function (app) {
   // Load index page
   app.get("/", (req, res) => {
     res.render("homepage");
   });
 
-  app.get("/LazyCupboard", ensureAuthenticated, function(req, res) {
+  app.get("/LazyCupboard", ensureAuthenticated, function (req, res) {
     //TODO : Move below findAll to a function "displayIngredients"
     db.Ingredients.findAll({
       where: { UserId: req.user.id }
-    }).then(function(dbIngredient, dbMeals) {
+    }).then(function (dbIngredient, dbMeals) {
       // data returned is an array. Need to wrap it in an object to send to handlebars
       let hbIngredients = { dbIngredient };
       res.render("index", hbIngredients);
@@ -20,8 +22,8 @@ module.exports = function(app) {
   });
 
   // Load example page and pass in an example by id
-  app.get("/ingredient/:id", ensureAuthenticated, function(req, res) {
-    db.Ingredients.findOne({ where: { id: req.params.id } }).then(function(
+  app.get("/ingredient/:id", ensureAuthenticated, function (req, res) {
+    db.Ingredients.findOne({ where: { id: req.params.id } }).then(function (
       dbExample
     ) {
       res.render("example", {
@@ -29,40 +31,50 @@ module.exports = function(app) {
       });
     });
   });
-  app.get("/recipe/:id", ensureAuthenticated, function(req, res) {
-    db.Recipe.findOne({ where: { id: req.params.id } }).then(function(ans) {
-      let recipetoSend = {
-        label: ans.label,
-        ingredients: [
-          { ingredient: "test1" },
-          { ingredient: "test2" },
-          { ingredient: "test3" }
-        ],
-        image: ans.image,
-        url: ans.url
-      };
-      console.log(recipetoSend);
+  app.get("/recipe/:id", ensureAuthenticated, function (req, res) {
+    db.Recipe.findOne({
+      where: {
+        id: req.params.id
+      },
+      include: [db.RecipeIngredient]
+    }).then(function (recipetoSend) {
       res.render("recipe", recipetoSend);
     });
   });
 
-  app.get("/myrecipes", ensureAuthenticated, function(req, res) {
+  app.get("/myrecipes", ensureAuthenticated, function (req, res) {
     console.log(startOfToday());
     db.Recipe.findAll({
       where: {
         UserId: req.user.id,
-        saved: true
-        // createdAt:startOfToday()
-      }
-    }).then(function(recipeList) {
-      let recipetoSend = { recipeList };
-      // console.log(recipetoSend)
-      res.render("myrecipes", recipetoSend);
+        saved: true,
+        createdAt: { [Op.gt]: startOfToday() }
+      },
+      include: [db.RecipeIngredient]
+    }).then(function (recipeList) {
+      let responsetobeSent = { recipeList };
+      res.render("myrecipes", responsetobeSent);
     });
+    // db.Recipe.findAll(
+    //   {
+    //     where: {
+    //       UserId: req.user.id,
+    //       saved: true
+    //       // createdAt:startOfToday()
+    //     }
+    //   },
+    //   {
+    //     include: [db.RecipeIngredient]
+    //   }
+    // ).then(function (recipeList) {
+    //   console.log(recipeList[0].dataValues)
+
+    //   res.json(responsetobeSent);
+    // });
   });
 
   // Render 404 page for any unmatched routes
-  app.get("*", function(req, res) {
+  app.get("*", function (req, res) {
     res.render("404");
   });
 };

@@ -24,8 +24,8 @@ module.exports.getRecipesInfo = function(recipeURI, sendRecipes) {
     "&app_key=" +
     queryKey;
   axios.get(queryUrl).then(function(response) {
-    var recipes = response.data.hits;
-    sendRecipes(recipes);
+    var recipe = response.data.hits;
+    sendRecipes(recipe);
     // console.log(recipes);
   });
 };

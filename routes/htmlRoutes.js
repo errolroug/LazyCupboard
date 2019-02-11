@@ -1,6 +1,7 @@
 var db = require("../models");
 const { ensureAuthenticated } = require("../controllers/authController");
 const startOfToday = require("date-fns/start_of_today");
+const getRecipebyURI = require("../controllers/recipeIngredientsAPIscript");
 
 module.exports = function (app) {
   // Load index page
@@ -30,34 +31,44 @@ module.exports = function (app) {
     });
   });
   app.get("/recipe/:id", ensureAuthenticated, function (req, res) {
-    db.Recipe.findOne({ where: { id: req.params.id } }).then(function (ans) {
-      let recipetoSend = {
-        label: ans.label,
-        ingredients: [
-          { ingredient: "test1" },
-          { ingredient: "test2" },
-          { ingredient: "test3" }
-        ],
-        image: ans.image,
-        url: ans.url
-      }
-      console.log(recipetoSend)
+    db.Recipe.findOne({
+      where: {
+        id: req.params.id
+      },
+      include: [db.RecipeIngredient]
+    }).then(function (recipetoSend) {
       res.render("recipe", recipetoSend);
     });
   });
 
   app.get("/myrecipes", ensureAuthenticated, function (req, res) {
-    console.log(startOfToday())
+    console.log(startOfToday());
     db.Recipe.findAll({
       where: {
-        UserId: req.user.id, saved: true,
-        // createdAt:startOfToday()
-      }
+        UserId: req.user.id,
+        saved: true
+      },
+      include: [db.RecipeIngredient]
     }).then(function (recipeList) {
-      let recipetoSend = { recipeList }
-      // console.log(recipetoSend)
-      res.render("myrecipes", recipetoSend);
+      let responsetobeSent = { recipeList };
+      res.render("myrecipes", responsetobeSent);
     });
+    // db.Recipe.findAll(
+    //   {
+    //     where: {
+    //       UserId: req.user.id,
+    //       saved: true
+    //       // createdAt:startOfToday()
+    //     }
+    //   },
+    //   {
+    //     include: [db.RecipeIngredient]
+    //   }
+    // ).then(function (recipeList) {
+    //   console.log(recipeList[0].dataValues)
+
+    //   res.json(responsetobeSent);
+    // });
   });
 
   // Render 404 page for any unmatched routes

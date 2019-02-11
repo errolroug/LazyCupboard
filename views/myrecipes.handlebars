@@ -10,7 +10,9 @@
             </div>
             <div class="card-reveal">
                 <span class="card-title grey-text text-darken-4">{{this.dataValues.label}}<i class="material-icons right">close</i></span>
-                <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                {{#each RecipeIngredients}}
+                <li class="collection-item">{{text}}</li>
+                {{/each}}
             </div>
             <div class="card-action">
                 <button class="btn waves-effect waves-light red delete-button-recipe" delID="{{this.dataValues.id}}"

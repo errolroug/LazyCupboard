@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 module.exports = function (sequelize, DataTypes) {
   let Recipe = sequelize.define("Recipe", {
     label: {
@@ -13,6 +14,13 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 0
     },
     url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1, 400]
+      }
+    },
+    uri: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -45,11 +53,7 @@ module.exports = function (sequelize, DataTypes) {
 
   Recipe.associate = function (models) {
     //associating Measurements with Ingredients
-    Recipe.hasMany(models.RecipeIngredient, {
-      foreignKey: {
-        allowNull: false
-      }
-    });
+    Recipe.hasMany(models.RecipeIngredient, { onDelete: "cascade" });
   };
 
   return Recipe;

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 module.exports = function (sequelize, DataTypes) {
   let RecipeIngredient = sequelize.define("RecipeIngredient", {
     text: {

@@ -136,6 +136,7 @@ $(document).ready(function () {
 
       var col = $("<div>").addClass("col s12 m6 l4");
       var card = $("<div>").addClass("card card-css center-align hoverable");
+      card.attr("id", data.uri)
       var cardImg = $("<div>").addClass(
         "card-image waves-effect waves-block waves-light div-image-size"
       );
@@ -179,11 +180,11 @@ $(document).ready(function () {
       cardReveal.append(cardTitleReveal);
 
       var ul = $("<ul>").addClass("collection");
-      for (var i = 0; i < data.ingredients.length; i++) {
+      for (var i = 0; i < data.RecipeIngredients.length; i++) {
         var li = $("<li>").addClass(
           "collection-item #eceff1 blue-grey lighten-5"
         );
-        li.text(data.ingredients[i].text);
+        li.text(data.RecipeIngredients[i].text);
         ul.append(li);
       }
       cardReveal.append(ul);

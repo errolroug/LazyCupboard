@@ -77,7 +77,11 @@ module.exports = function (app) {
   app.post("/api/recipesAPI", function (req, res) {
     //Sequelize code that will capture all 'checked' ingredients in the db for the logged in user
     let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1;
-    db.Recipe.destroy({ where: { saved: false } })
+    db.Recipe.destroy(
+      { where: { saved: false } },
+      { include: [db.RecipeIngredient] }
+    );
+    // db.RecipeIngredient.destroy({ where: {} });
 
     db.Ingredients.findAll({
       where: { checked: "checked", UserId: userID }
@@ -94,30 +98,55 @@ module.exports = function (app) {
       //Variable that hold function for handling what comes back from API call
       var sendRecipes = function (response) {
         //Cannot use .catch -- replaced with if/else statement
+        // console.log(response)
         if (response.length > 0) {
-          var recipes = []
+          var recipes = [];
+          var counteri = 0;
+
           for (var i = 0; i < response.length; i++) {
             recipes.push({
               label: response[i].recipe.label,
               calories: Number(
                 (
-                  response[i].recipe.calories /
-                  response[i].recipe.yield
+                  response[i].recipe.calories / response[i].recipe.yield
                 ).toFixed(0)
               ),
               url: response[i].recipe.url,
+              uri: response[i].recipe.uri,
               image: response[i].recipe.image,
-              recipeIngredient: response[i].recipe.ingredients,
+              RecipeIngredients: response[i].recipe.ingredients,
               UserId: req.user.id
             });
+            db.Recipe.create(recipes[i], {
+              include: [db.RecipeIngredient]
+            }).then(function (dbResponse) {
+              counteri++
+              if (counteri == response.length) {
+                db.Recipe.findAll({
+                  include: [db.RecipeIngredient]
+                }).then(function (responsetobeSent) {
+                  res.json(responsetobeSent);
+                });
+              }
+            })
           }
-          db.Recipe.bulkCreate(recipes).then(function (newRecipes) {
-            var recipetoSend = newRecipes
-            for (var i = 0; i < response.length; i++) {
-              recipetoSend[i].dataValues.ingredients = recipes[i].recipeIngredient
-            }
-            res.send(recipetoSend);
-          })
+
+          // db.Recipe.findAll({
+          //   attributes: [["id", "label"], "calories", "url", "uri", "image"],
+          //   include: [
+          //     {
+          //       model: db.RecipeIngredient
+          //     },
+          //     {
+          //       attributes: ["text", "weight"]
+          //     }
+          //   ]
+          // }).then(recipestoSend => {
+          //   res.send(recipestoSend);
+          // });
+          // db.Recipe.findAll({ include: [db.RecipeIngredient] }).then(function (recipestoSend) {
+          //   res.json(recipestoSend);
+          // });
         } else {
           res.status(500).send("Recipes Internal Server Error");
           console.log("Recipes - NO RESULTS FOUND");
@@ -285,6 +314,7 @@ module.exports = function (app) {
     }
   });
   app.put("/api/saveRecipe", function (req, res) {
+    console.log(req.body)
     db.Recipe.update(
       {
         saved: true
@@ -315,15 +345,15 @@ module.exports = function (app) {
               children: []
             }
           ]
-        }
+        };
         for (var i = 0; i < responseArray.length; i++) {
           result.children[0].children.push({
             name: responseArray[i].label,
             size: responseArray[i].calories
           });
         }
-        console.log(result)
-        res.json(result)
+        console.log(result);
+        res.json(result);
       })
       .catch(err => {
         // console.log(err);
@@ -331,7 +361,7 @@ module.exports = function (app) {
       });
   });
   app.delete("/api/myrecipes/:id", function (req, res) {
-    console.log(req.body.id)
+    console.log(req.body.id);
     db.Recipe.destroy({ where: { id: req.params.id } }).then(function (
       response
     ) {

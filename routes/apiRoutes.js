@@ -77,11 +77,7 @@ module.exports = function (app) {
   app.post("/api/recipesAPI", function (req, res) {
     //Sequelize code that will capture all 'checked' ingredients in the db for the logged in user
     let userID = process.env.NODE_ENV !== "test" ? req.user.id : 1;
-    db.Recipe.destroy(
-      { where: { saved: false } },
-      { include: [db.RecipeIngredient] }
-    );
-    // db.RecipeIngredient.destroy({ where: {} });
+    db.Recipe.destroy({ where: { saved: false } });
 
     db.Ingredients.findAll({
       where: { checked: "checked", UserId: userID }
@@ -314,7 +310,6 @@ module.exports = function (app) {
     }
   });
   app.put("/api/saveRecipe", function (req, res) {
-    console.log(req.body)
     db.Recipe.update(
       {
         saved: true

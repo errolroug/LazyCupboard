@@ -129,23 +129,6 @@ module.exports = function (app) {
               }
             });
           }
-
-          // db.Recipe.findAll({
-          //   attributes: [["id", "label"], "calories", "url", "uri", "image"],
-          //   include: [
-          //     {
-          //       model: db.RecipeIngredient
-          //     },
-          //     {
-          //       attributes: ["text", "weight"]
-          //     }
-          //   ]
-          // }).then(recipestoSend => {
-          //   res.send(recipestoSend);
-          // });
-          // db.Recipe.findAll({ include: [db.RecipeIngredient] }).then(function (recipestoSend) {
-          //   res.json(recipestoSend);
-          // });
         } else {
           res.status(500).send("Recipes Internal Server Error");
           console.log("Recipes - NO RESULTS FOUND");
@@ -166,6 +149,9 @@ module.exports = function (app) {
   //login user route
 
   app.get("/users/login", (res, req, next) => {
+    if (req.user) {
+      res.redirect("/");
+    }
     passport.authenticate("local", {
       successRedirect: "/LazyCupboard",
       failureRedirect: "register"
@@ -254,7 +240,7 @@ module.exports = function (app) {
   app.get("/users/logout", (req, res) => {
     req.logout();
     // req.flash('success_msg', 'you are logged out')
-    res.redirect("/users/login");
+    res.redirect("/");
   });
   //Below is our get request to find the user information page. So far it is returned as json and not as html
   app.get("/api/user", function (req, res) {

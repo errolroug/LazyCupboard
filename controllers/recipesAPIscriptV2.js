@@ -1,4 +1,4 @@
-var keys = require("./keys");
+var keys = require("../keys");
 
 // REQUIRE MODELS FOLDER WHICH CONTAIN TABLE MODELS
 var db = require("../models");

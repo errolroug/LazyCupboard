@@ -25,7 +25,7 @@ module.exports.getIngredientInfo = function(
   var queryID = "80dab669";
 
   //Query ID is required by the API - see documentation on Edamam site
-  var queryKey = edamam.ingredients_key;
+  var queryKey = keys.edamam.ingredients_key;
 
   //Run a request with axios to the Edamam API with the food item specified by var food
   //NOTE: You can add additional parameters to this request, see documentation

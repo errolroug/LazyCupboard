@@ -1,3 +1,5 @@
+var keys = require("../keys");
+
 // REQUIRE MODELS FOLDER WHICH CONTAIN TABLE MODELS
 var db = require("../models");
 
@@ -12,9 +14,9 @@ var apiRoutes = require("../routes/apiRoutes");
 
 module.exports.getRecipesInfo = function(food, sendRecipes) {
   var food = food;
-  console.log("In API Call: " + food);
+  // console.log("In API Call: " + food);
   var queryID = "fcb72d93";
-  var queryKey = "f10388ab91215f04c2c1a28330336b8d";
+  var queryKey = keys.edamam.recipes_key;
   var queryUrl =
     "https://api.edamam.com/search?q=" +
     food +

@@ -92,7 +92,7 @@ module.exports = function(app) {
         food = food + "+" + ing[i].dataValues.name;
       }
       //Log what's being saved in the 'food' variable after for loop
-      console.log("In API Route: " + food);
+      // console.log("In API Route: " + food);
 
       //Variable that hold function for handling what comes back from API call
       var sendRecipes = function(response) {
@@ -337,7 +337,7 @@ module.exports = function(app) {
             size: responseArray[i].calories
           });
         }
-        console.log(result);
+        // console.log(result);
         res.json(result);
       })
       .catch(err => {
@@ -346,7 +346,7 @@ module.exports = function(app) {
       });
   });
   app.delete("/api/myrecipes/:id", function(req, res) {
-    console.log(req.body.id);
+    // console.log(req.body.id);
     db.Recipe.destroy({ where: { id: req.params.id } }).then(function(
       response
     ) {

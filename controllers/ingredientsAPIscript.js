@@ -1,4 +1,6 @@
+var keys = require("../keys");
 // REQUIRE MODELS FOLDER WHICH CONTAIN TABLE MODELS
+
 var db = require("../models");
 
 // REQUIRE AXIOS FOR API CALL
@@ -23,7 +25,7 @@ module.exports.getIngredientInfo = function(
   var queryID = "80dab669";
 
   //Query ID is required by the API - see documentation on Edamam site
-  var queryKey = "bf81be851f5f242c3a6279af40337e79";
+  var queryKey = keys.edamam.ingredients_key;
 
   //Run a request with axios to the Edamam API with the food item specified by var food
   //NOTE: You can add additional parameters to this request, see documentation

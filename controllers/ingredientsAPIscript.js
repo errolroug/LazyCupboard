@@ -26,7 +26,6 @@ module.exports.getIngredientInfo = function(
 
   //Query ID is required by the API - see documentation on Edamam site
   var queryKey = keys.edamam.ingredients_key;
-
   //Run a request with axios to the Edamam API with the food item specified by var food
   //NOTE: You can add additional parameters to this request, see documentation
   var queryUrl =
@@ -36,13 +35,14 @@ module.exports.getIngredientInfo = function(
     queryKey +
     "&ingr=" +
     food;
+
   axios.get(queryUrl).then(function(response) {
-    var foodLabel = response.data.parsed[0].food.label;
+    var foodLabel = response.data.hints[0].food.label;
     var foodLabelName = foodLabel.split(",");
-    var foodCalories = response.data.parsed[0].food.nutrients.ENERC_KCAL;
-    var foodProtein = response.data.parsed[0].food.nutrients.PROCNT;
-    var foodFat = response.data.parsed[0].food.nutrients.FAT;
-    var foodCarbs = response.data.parsed[0].food.nutrients.CHOCDF;
+    var foodCalories = response.data.hints[0].food.nutrients.ENERC_KCAL;
+    var foodProtein = response.data.hints[0].food.nutrients.PROCNT;
+    var foodFat = response.data.hints[0].food.nutrients.FAT;
+    var foodCarbs = response.data.hints[0].food.nutrients.CHOCDF;
 
     //Create ingredient object to store the data being returned by the API call
     ingredient = {

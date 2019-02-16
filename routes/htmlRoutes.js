@@ -55,22 +55,6 @@ module.exports = function(app) {
       let responsetobeSent = { recipeList };
       res.render("myrecipes", responsetobeSent);
     });
-    // db.Recipe.findAll(
-    //   {
-    //     where: {
-    //       UserId: req.user.id,
-    //       saved: true
-    //       // createdAt:startOfToday()
-    //     }
-    //   },
-    //   {
-    //     include: [db.RecipeIngredient]
-    //   }
-    // ).then(function (recipeList) {
-    //   console.log(recipeList[0].dataValues)
-
-    //   res.json(responsetobeSent);
-    // });
   });
 
   // Render 404 page for any unmatched routes

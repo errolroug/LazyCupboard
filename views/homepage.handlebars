@@ -1,9 +1,11 @@
 <div class="contain">
     <img class="landing-image" src="/images/lazy.jpg">
+    {{#if user}}
+    <a href="/lazycupboard"><button class="logInBtn waves-effect waves-light btn-large">Get Started</button></a>
+    {{else}}
     <button class="signUpBtn waves-effect waves-light btn-large">Sign Up</button>
     <button href="/users/login" class="logInBtn waves-effect waves-light btn-large">Log In</button>
-    {{!-- <a class="logInBtn waves-effect waves-light btn">Log In</a>
-    <a class="signUpBtn waves-effect waves-light btn">Sign Up</a> --}}
+    {{/if}}
 </div>
 
 

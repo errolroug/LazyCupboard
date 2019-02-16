@@ -84,4 +84,4 @@ Deployed site:[https://lazycupboard.herokuapp.com/](https://lazycupboard.herokua
 <br/><br/>
 3. Click on 'My Recipes' to view available details for each recipe that was previously saved.
 <br/><br/>
-![gif-6](Images/gif06.gif)
+![](https://github.com/errolroug/LazyCupboard/blob/master/Images/gif06.gif)

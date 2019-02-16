@@ -42,33 +42,33 @@ Deployed site:[https://lazycupboard.herokuapp.com/](https://lazycupboard.herokua
 1. On the landing page, you must either register for an account or login to get started. If you already have an account, click the 'Login' button. If you do not have an account, register by clicking on the 'Sign Up' button.
 <br/>
 2. Fill out the registration form. Once you have registered, you will be redirected to the login page.
-<br/>
+
 ![gif-1](Images/gif01.gif)
-<br/><br/>
+
 
 #### Add Ingredients To View Nutritional Facts
 <br/>
 1. Click on the 'Ingredient' text box, type in an ingredient you have in your kitchen, then click the '+' button.
 <br/><br/>
 2. Repeat this step to add more ingredients on this page.
-<br/><br/>
+
 ![gif-2](Images/gif02.gif)
-<br/><br/>
+
 3. Review the nutritional facts of the ingredients you have entered, then use the check boxes to the left of the list to select the ingredients you would like find recipes for.
 <br/><br/>
 4. Click on the 'Find Recipes' to view available recipes.
-<br/><br/>
+
 ![gif-4](Images/gif04.gif)
-<br/><br/>
+
 
 #### Add Recipes To Your List of Recipes
 <br/>
 1. After reviewing the recipes provided, save the recipes you like by clicking the 'Prepare' button for each recipe.
 <br/><br/>
 2. Once you have saved a few recipes, click on the 'My Recipes' button on the upper right of the page to view all saved recipes.
-<br/><br/>
+
 ![gif-5](Images/gif05.gif)
-<br/><br/>
+
 
 #### Navigate Back To The Add Ingredients Page
 <br/>
@@ -83,5 +83,5 @@ Deployed site:[https://lazycupboard.herokuapp.com/](https://lazycupboard.herokua
 2. Click on the 'Total Calories' bar on the top of the page to see the calorie count for a single serving of each recipe that was saved previously.
 <br/><br/>
 3. Click on 'My Recipes' to view available details for each recipe that was previously saved.
-<br/><br/>
+
 ![gif-6](Images/gif06.gif)

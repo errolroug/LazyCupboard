@@ -43,7 +43,7 @@ Deployed site:[https://lazycupboard.herokuapp.com/](https://lazycupboard.herokua
 <br/>
 2. Fill out the registration form. Once you have registered, you will be redirected to the login page.
 <br/>
-![gif-1](Images/gif01.gif)
+![gif-1](https://github.com/errolroug/LazyCupboard/blob/master/Images/gif01.gif)
 <br/><br/>
 
 #### Add Ingredients To View Nutritional Facts
@@ -52,13 +52,13 @@ Deployed site:[https://lazycupboard.herokuapp.com/](https://lazycupboard.herokua
 <br/><br/>
 2. Repeat this step to add more ingredients on this page.
 <br/><br/>
-![gif-2](Images/gif02.gif)
+![gif-2](https://github.com/errolroug/LazyCupboard/blob/master/Images/gif02.gif)
 <br/><br/>
 3. Review the nutritional facts of the ingredients you have entered, then use the check boxes to the left of the list to select the ingredients you would like find recipes for.
 <br/><br/>
 4. Click on the 'Find Recipes' to view available recipes.
 <br/><br/>
-![gif-4](Images/gif04.gif)
+![gif-4](https://github.com/errolroug/LazyCupboard/blob/master/Images/gif04.gif)
 <br/><br/>
 
 #### Add Recipes To Your List of Recipes
@@ -67,7 +67,7 @@ Deployed site:[https://lazycupboard.herokuapp.com/](https://lazycupboard.herokua
 <br/><br/>
 2. Once you have saved a few recipes, click on the 'My Recipes' button on the upper right of the page to view all saved recipes.
 <br/><br/>
-![gif-5](Images/gif05.gif)
+![gif-5](https://github.com/errolroug/LazyCupboard/blob/master/Images/gif05.gif)
 <br/><br/>
 
 #### Navigate Back To The Add Ingredients Page
@@ -84,4 +84,4 @@ Deployed site:[https://lazycupboard.herokuapp.com/](https://lazycupboard.herokua
 <br/><br/>
 3. Click on 'My Recipes' to view available details for each recipe that was previously saved.
 <br/><br/>
-![gif-6](Images/gif06.gif)
+![gif-6](https://github.com/errolroug/LazyCupboard/blob/master/Images/gif06.gif)

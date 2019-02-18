@@ -1,3 +1,5 @@
+{{> navbar}}
+
 <div class="row">
     {{#each recipeList}}
     <div class="col s12 m6 l4">
@@ -6,10 +8,12 @@
                 <a href="{{this.dataValues.url}}"><img class="activator image-size" src="{{this.dataValues.image}}"></a>
             </div>
             <div class="card-content">
-                <span class="card-title activator grey-text text-darken-4">{{this.dataValues.label}}<i class="material-icons right">more_vert</i></span>
+                <span class="card-title activator grey-text text-darken-4">{{this.dataValues.label}}<i
+                        class="material-icons right">more_vert</i></span>
             </div>
             <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">{{this.dataValues.label}}<i class="material-icons right">close</i></span>
+                <span class="card-title grey-text text-darken-4">{{this.dataValues.label}}<i
+                        class="material-icons right">close</i></span>
                 {{#each RecipeIngredients}}
                 <li class="collection-item">{{text}}</li>
                 {{/each}}

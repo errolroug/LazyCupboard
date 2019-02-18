@@ -48,28 +48,29 @@
 }
 .div-image-size {
   max-height: auto;
-	max-width: 45%;
+  max-width: 45%;
 }
 
-.delete-button-recipe{
-	margin: auto
-
+.delete-button-recipe {
+  margin: auto;
 }
 .image-size {
   display: block;
   width: 100%;
   height: auto;
 }
-.recipecard-css{
-	height: 400px;
+.recipecard-css {
+  height: 400px;
 }
-.brand-logo, .card-title {
+.brand-logo,
+.card-title {
   font-family: "Amatic SC", cursive;
   /* font-size: 3em !important; */
 }
 
 .contain {
-  height: 640px;
+  height: 100vh;
+  width: 100%;
   overflow: hidden;
   display: block;
   position: relative;
@@ -81,41 +82,31 @@
   max-height: 100%;
 }
 
-.contain .signUpBtn {
+.logInBtn,
+.signUpBtn {
   position: absolute;
   bottom: 10%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 20px;
+  /* padding: 12px 24px; */
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.signUpBtn {
   left: 30%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  background-color: #555;
-  color: white;
-  font-size: 20px;
-  /* padding: 12px 24px; */
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
 }
 
-.contain .signUpBtn:hover {
-  background-color: black;
-}
-
-.contain .logInBtn {
-  position: absolute;
-  bottom: 10%;
+.logInBtn {
   left: 65%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  background-color: #555;
-  color: white;
-  font-size: 20px;
-  /* padding: 12px 24px; */
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
 }
 
-.contain .logInBtn:hover {
+.logInBtn:hover,
+.signUpBtn:hover {
   background-color: black;
 }
 
@@ -125,9 +116,9 @@
   /* font-size: 3em !important; */
 }
 
-@media only screen and (min-width: 730px) {
+/* @media only screen and (min-width: 730px) {
   .contain {
-    height: 753px;
+
   }
   .contain .logInBtn {
     bottom: 10%;
@@ -137,4 +128,11 @@
     bottom: 10%;
     left: 30%;
   }
-}
+} */
+
+/* @media only screen and (max-width: 730px) {
+  .signUpBtn,
+  .logInBtn {
+    bottom: 50%;
+  }
+} */

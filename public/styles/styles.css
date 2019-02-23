@@ -118,7 +118,6 @@
 
 /* @media only screen and (min-width: 730px) {
   .contain {
-
   }
   .contain .logInBtn {
     bottom: 10%;
@@ -130,9 +129,20 @@
   }
 } */
 
-/* @media only screen and (max-width: 730px) {
-  .signUpBtn,
-  .logInBtn {
-    bottom: 50%;
+@media only screen and (max-width: 730px) {
+  .contain {
+    background-image: url("../images/lazy.jpg");
+    /* background-size: 100% 50% */
+    background-repeat: repeat-y;
   }
-} */
+
+  .logInBtn {
+    bottom: 30%;
+    left: 50%;
+  }
+
+  .signUpBtn {
+    bottom: 40%;
+    left: 50%;
+  }
+}

@@ -10,7 +10,8 @@
       {{#if user}}
       <li><a href="/myrecipes">My Recipes</a></li>
 
-      <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Welcome {{user.firstName}}<i class="material-icons right">arrow_drop_down</i></a></li>
+      <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Welcome {{user.firstName}}<i
+            class="material-icons right">arrow_drop_down</i></a></li>
       {{else}}
       <li><a href="/users/login">Login</a></li>
       <li><a href="/users/register">Register</a></li>
@@ -19,11 +20,13 @@
   </div>
 </nav>
 
-{{!-- <ul class="sidenav" id="mobile-demo">
+<ul class="sidenav" id="mobile-demo">
   {{#if user}}
-  <li><a class="dropdown-trigger" href="/" data-target="dropdown1">Welcome {{user.firstName}}<i class="material-icons right">arrow_drop_down</i></a></li>
+  <li><a href="/myrecipes">My Recipes</a></li>
+  <li class="divider"></li>
+  <li><a href="/users/logout">Logout</a></li>
   {{else}}
   <li><a href="/users/login">Login</a></li>
   <li><a href="/users/register">Register</a></li>
   {{/if}}
-</ul> --}}
+</ul>

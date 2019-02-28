@@ -21,8 +21,9 @@
 </nav>
 
 <ul class="sidenav" id="mobile-demo">
-  <li><a href="/myrecipes">My Recipes</a></li>
   {{#if user}}
+  <li><a href="/myrecipes">My Recipes</a></li>
+  <li class="divider"></li>
   <li><a href="/users/logout">Logout</a></li>
   {{else}}
   <li><a href="/users/login">Login</a></li>
